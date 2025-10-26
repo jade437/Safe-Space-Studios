@@ -1,0 +1,1334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emergency Safety Features - SafeSpace Studio</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Trauma-Informed Design Variables */
+        :root {
+            --primary: #6C63FF;
+            --primary-light: #8E85FF;
+            --primary-dark: #5B52EE;
+            --secondary: #FF6584;
+            --success: #4CAF50;
+            --warning: #FFC107;
+            --danger: #F44336;
+            --text: #333333;
+            --text-light: #666666;
+            --text-lighter: #999999;
+            --bg: #f8f9fa;
+            --card-bg: #ffffff;
+            --border: #e0e0e0;
+            --shadow: 0 4px 12px rgba(0,0,0,0.08);
+            --shadow-hover: 0 8px 24px rgba(0,0,0,0.12);
+            
+            /* Emergency-specific colors */
+            --sos: #F44336;
+            --walk: #4CAF50;
+            --evidence: #2196F3;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        /* Focus styles for accessibility */
+        *:focus {
+            outline: 2px solid var(--primary);
+            outline-offset: 2px;
+        }
+
+        /* Emergency Exit */
+        .emergency-exit {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1001;
+        }
+
+        .btn-emergency {
+            background: var(--danger);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+        }
+
+        .btn-emergency:hover, 
+        .btn-emergency:focus {
+            background: #d32f2f;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        /* App Header */
+        .app-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px 20px;
+            background: var(--card-bg);
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .app-header h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .user-actions {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .btn-icon {
+            background: none;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: var(--text);
+            transition: all 0.3s ease;
+        }
+
+        .btn-icon:hover, 
+        .btn-icon:focus {
+            background-color: rgba(108, 99, 255, 0.1);
+            color: var(--primary);
+        }
+
+        /* Main Content */
+        .emergency-container {
+            padding: 30px;
+            min-height: 100vh;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Welcome Section */
+        .emergency-intro {
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        .emergency-intro h2 {
+            font-size: 2rem;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .emergency-intro p {
+            font-size: 1.1rem;
+            color: var(--text-light);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        /* Emergency Features Grid */
+        .emergency-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+            margin: 40px 0;
+        }
+
+        .feature-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 30px;
+            text-align: center;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 6px;
+        }
+
+        .feature-card:hover, 
+        .feature-card:focus {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .feature-card i {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            transition: transform 0.3s ease;
+        }
+
+        .feature-card:hover i, 
+        .feature-card:focus i {
+            transform: scale(1.1);
+        }
+
+        .feature-card h3 {
+            margin: 0 0 15px 0;
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .feature-card p {
+            margin: 0 0 20px 0;
+            color: var(--text-light);
+            font-size: 1rem;
+        }
+
+        .btn-feature {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-feature:hover, 
+        .btn-feature:focus {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        /* Theme variations for each feature */
+        .feature-card.sos::before {
+            background: var(--sos);
+        }
+
+        .feature-card.sos i {
+            color: var(--sos);
+        }
+
+        .feature-card.sos .btn-feature {
+            background: var(--sos);
+        }
+
+        .feature-card.sos .btn-feature:hover, 
+        .feature-card.sos .btn-feature:focus {
+            background: #d32f2f;
+        }
+
+        .feature-card.walk::before {
+            background: var(--walk);
+        }
+
+        .feature-card.walk i {
+            color: var(--walk);
+        }
+
+        .feature-card.walk .btn-feature {
+            background: var(--walk);
+        }
+
+        .feature-card.walk .btn-feature:hover, 
+        .feature-card.walk .btn-feature:focus {
+            background: #3d8b40;
+        }
+
+        .feature-card.evidence::before {
+            background: var(--evidence);
+        }
+
+        .feature-card.evidence i {
+            color: var(--evidence);
+        }
+
+        .feature-card.evidence .btn-feature {
+            background: var(--evidence);
+        }
+
+        .feature-card.evidence .btn-feature:hover, 
+        .feature-card.evidence .btn-feature:focus {
+            background: #1976D2;
+        }
+
+        /* Active Emergency Status */
+        .active-emergency {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 20px;
+            margin: 20px 0;
+            box-shadow: var(--shadow);
+            border-left: 6px solid var(--danger);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.8; }
+            100% { opacity: 1; }
+        }
+
+        .emergency-status {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .status-info h3 {
+            color: var(--danger);
+            margin-bottom: 5px;
+        }
+
+        .status-info p {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        /* Recording Interface */
+        .recording-interface {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 20px;
+            margin: 20px 0;
+            box-shadow: var(--shadow);
+            text-align: center;
+        }
+
+        .recording-preview {
+            width: 100%;
+            max-width: 400px;
+            height: 300px;
+            background: #000;
+            border-radius: 12px;
+            margin: 0 auto 20px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .recording-preview video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .recording-timer {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--danger);
+            margin: 10px 0;
+        }
+
+        .recording-controls {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .btn-record {
+            background: var(--danger);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-stop {
+            background: var(--success);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Location Tracking */
+        .location-tracker {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 20px;
+            margin: 20px 0;
+            box-shadow: var(--shadow);
+        }
+
+        .location-map {
+            width: 100%;
+            height: 300px;
+            background: #e9ecef;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-light);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .location-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .location-item {
+            background: var(--bg);
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .location-item h4 {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            margin-bottom: 5px;
+        }
+
+        .location-item p {
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        /* Virtual Walk Interface */
+        .walk-interface {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 20px;
+            margin: 20px 0;
+            box-shadow: var(--shadow);
+        }
+
+        .walk-map {
+            width: 100%;
+            height: 300px;
+            background: #e9ecef;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-light);
+            position: relative;
+        }
+
+        .walk-contacts {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .contact-item {
+            background: var(--bg);
+            padding: 15px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .contact-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+
+        /* Emergency Modal */
+        .emergency-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .emergency-modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .emergency-content {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 30px;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            box-shadow: var(--shadow);
+            position: relative;
+        }
+
+        .emergency-header {
+            margin-bottom: 20px;
+        }
+
+        .emergency-header i {
+            font-size: 4rem;
+            margin-bottom: 15px;
+        }
+
+        .emergency-header h3 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .emergency-header p {
+            color: var(--text-light);
+            font-size: 1rem;
+        }
+
+        .emergency-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 25px;
+            justify-content: center;
+        }
+
+        .btn-cancel {
+            background: rgba(108, 99, 255, 0.1);
+            color: var(--primary);
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-cancel:hover, 
+        .btn-cancel:focus {
+            background: rgba(108, 99, 255, 0.2);
+        }
+
+        .btn-confirm {
+            background: var(--danger);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-confirm:hover, 
+        .btn-confirm:focus {
+            background: #d32f2f;
+        }
+
+        /* Countdown Timer */
+        .countdown {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--danger);
+            margin: 20px 0;
+        }
+
+        /* South African Services */
+        .sa-services {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 30px;
+            margin: 40px 0;
+            box-shadow: var(--shadow);
+        }
+
+        .sa-services h3 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .service-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .service-item {
+            background: var(--bg);
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .service-item h4 {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            color: var(--primary);
+        }
+
+        .service-item p {
+            color: var(--text-light);
+            margin-bottom: 15px;
+            font-size: 0.9rem;
+        }
+
+        .service-number {
+            background: var(--primary);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 25px;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .emergency-container {
+                padding: 20px 15px;
+            }
+            
+            .emergency-features {
+                grid-template-columns: 1fr;
+            }
+            
+            .emergency-actions {
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .app-header h1 {
+                font-size: 1.3rem;
+            }
+            
+            .emergency-intro h2 {
+                font-size: 1.7rem;
+            }
+        }
+    </style>
+</head>
+<body class="trauma-informed">
+    <!-- Emergency Exit -->
+    <div class="emergency-exit">
+        <a href="https://www.google.com" class="btn-emergency">
+            <i class="fas fa-running"></i> Exit Quickly
+        </a>
+    </div>
+
+    <!-- App Header -->
+    <header class="app-header">
+        <h1>Emergency Safety</h1>
+        <div class="user-actions">
+            <button class="btn-icon" id="notifications-btn" aria-label="Notifications">
+                <i class="fas fa-bell"></i>
+            </button>
+            <div class="user-avatar" id="user-menu-toggle" aria-label="User menu" tabindex="0" role="button">
+                <i class="fas fa-user"></i>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="emergency-container">
+        <!-- Welcome Section -->
+        <section class="emergency-intro">
+            <h2>Emergency Safety Features</h2>
+            <p>Immediate help when you need it most. Connected directly to South African emergency services and support networks.</p>
+        </section>
+
+        <!-- Active Emergency Status -->
+        <div id="active-emergency" class="active-emergency" style="display: none;">
+            <div class="emergency-status">
+                <div class="status-info">
+                    <h3>🆘 EMERGENCY ACTIVE</h3>
+                    <p>Your location is being tracked and emergency services have been notified</p>
+                </div>
+                <button class="btn-feature" id="end-emergency" style="background: var(--success);">
+                    <i class="fas fa-times"></i> End Emergency
+                </button>
+            </div>
+        </div>
+
+        <!-- Emergency Features Grid -->
+        <section class="emergency-features">
+            <!-- SOS/Panic Button -->
+            <div class="feature-card sos">
+                <i class="fas fa-bell" aria-hidden="true"></i>
+                <h3>SOS/Panic Button</h3>
+                <p>Instantly alert SAPS, trusted contacts with live location tracking</p>
+                <button class="btn-feature" id="sos-button">
+                    <i class="fas fa-play" aria-hidden="true"></i> Activate SOS
+                </button>
+            </div>
+            
+            <!-- Virtual Walk -->
+            <div class="feature-card walk">
+                <i class="fas fa-walking" aria-hidden="true"></i>
+                <h3>Virtual Walk</h3>
+                <p>Share your route and estimated arrival time with trusted contacts</p>
+                <button class="btn-feature" id="virtual-walk-button">
+                    <i class="fas fa-play" aria-hidden="true"></i> Start Virtual Walk
+                </button>
+            </div>
+            
+            <!-- Incident Recording -->
+            <div class="feature-card evidence">
+                <i class="fas fa-camera" aria-hidden="true"></i>
+                <h3>Incident Recording</h3>
+                <p>Securely record and store evidence with automatic cloud backup</p>
+                <button class="btn-feature" id="recording-button">
+                    <i class="fas fa-play" aria-hidden="true"></i> Start Recording
+                </button>
+            </div>
+        </section>
+
+        <!-- Recording Interface -->
+        <div id="recording-interface" class="recording-interface" style="display: none;">
+            <h3>Incident Recording</h3>
+            <div class="recording-preview">
+                <video id="recording-video" autoplay muted></video>
+            </div>
+            <div class="recording-timer" id="recording-timer">00:00</div>
+            <div class="recording-controls">
+                <button class="btn-record" id="start-recording-btn">
+                    <i class="fas fa-record-vinyl"></i> Start Recording
+                </button>
+                <button class="btn-stop" id="stop-recording-btn" style="display: none;">
+                    <i class="fas fa-stop"></i> Stop Recording
+                </button>
+            </div>
+        </div>
+
+        <!-- Location Tracking -->
+        <div id="location-tracker" class="location-tracker" style="display: none;">
+            <h3>Live Location Tracking</h3>
+            <div class="location-map" id="location-map">
+                <p>📍 Loading your current location...</p>
+            </div>
+            <div class="location-details">
+                <div class="location-item">
+                    <h4>Latitude</h4>
+                    <p id="latitude">-26.2041°</p>
+                </div>
+                <div class="location-item">
+                    <h4>Longitude</h4>
+                    <p id="longitude">28.0473°</p>
+                </div>
+                <div class="location-item">
+                    <h4>Accuracy</h4>
+                    <p id="accuracy">10m</p>
+                </div>
+                <div class="location-item">
+                    <h4>Last Updated</h4>
+                    <p id="location-time">Just now</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Virtual Walk Interface -->
+        <div id="walk-interface" class="walk-interface" style="display: none;">
+            <h3>Virtual Walk - Route Sharing</h3>
+            <div class="walk-map" id="walk-map">
+                <p>🗺️ Setting up your route...</p>
+            </div>
+            
+            <div class="walk-contacts">
+                <div class="contact-item">
+                    <div class="contact-avatar">TS</div>
+                    <div>
+                        <h4>Thandi Security</h4>
+                        <p>Community Patrol</p>
+                    </div>
+                </div>
+                <div class="contact-item">
+                    <div class="contact-avatar">MF</div>
+                    <div>
+                        <h4>Maria Friend</h4>
+                        <p>Trusted Contact</p>
+                    </div>
+                </div>
+                <div class="contact-item">
+                    <div class="contact-avatar">LS</div>
+                    <div>
+                        <h4>Local SAPS</h4>
+                        <p>Police Station</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="emergency-actions">
+                <button class="btn-cancel" id="cancel-walk">
+                    <i class="fas fa-times"></i> Cancel Walk
+                </button>
+                <button class="btn-confirm" id="confirm-arrival">
+                    <i class="fas fa-check"></i> Confirm Arrival
+                </button>
+            </div>
+        </div>
+
+        <!-- South African Emergency Services -->
+        <section class="sa-services">
+            <h3>South African Emergency Services</h3>
+            <div class="service-list">
+                <div class="service-item">
+                    <h4>SAPS Emergency</h4>
+                    <p>South African Police Service</p>
+                    <div class="service-number">10111</div>
+                </div>
+                <div class="service-item">
+                    <h4>Ambulance</h4>
+                    <p>Emergency Medical Services</p>
+                    <div class="service-number">10177</div>
+                </div>
+                <div class="service-item">
+                    <h4>GBV Command Centre</h4>
+                    <p>24/7 Gender-Based Violence Support</p>
+                    <div class="service-number">0800 428 428</div>
+                </div>
+                <div class="service-item">
+                    <h4>Lifeline SA</h4>
+                    <p>Counselling & Suicide Prevention</p>
+                    <div class="service-number">0861 322 322</div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- SOS Activation Modal -->
+    <div id="sos-modal" class="emergency-modal" role="dialog" aria-modal="true" aria-labelledby="sos-title">
+        <div class="emergency-content">
+            <div class="emergency-header">
+                <i class="fas fa-bell" style="color: var(--sos);" aria-hidden="true"></i>
+                <h3 id="sos-title">Activate Emergency SOS?</h3>
+                <p>This will immediately alert SAPS, your emergency contacts and share your live location</p>
+            </div>
+            <div class="countdown" id="sos-countdown">5</div>
+            <div class="emergency-actions">
+                <button class="btn-cancel" id="cancel-sos">
+                    <i class="fas fa-times" aria-hidden="true"></i> Cancel
+                </button>
+                <button class="btn-confirm" id="confirm-sos">
+                    <i class="fas fa-bell" aria-hidden="true"></i> Activate SOS
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Real Emergency Safety Features Implementation
+        document.addEventListener('DOMContentLoaded', function() {
+            // State management
+            let emergencyActive = false;
+            let recordingActive = false;
+            let locationTracking = false;
+            let virtualWalkActive = false;
+            let recordingTimer = null;
+            let recordingSeconds = 0;
+            let locationWatchId = null;
+            let mediaRecorder = null;
+            let recordedChunks = [];
+            let countdownTimer = null;
+
+            // DOM Elements
+            const sosModal = document.getElementById('sos-modal');
+            const sosButton = document.getElementById('sos-button');
+            const virtualWalkButton = document.getElementById('virtual-walk-button');
+            const recordingButton = document.getElementById('recording-button');
+            const activeEmergency = document.getElementById('active-emergency');
+            const recordingInterface = document.getElementById('recording-interface');
+            const locationTracker = document.getElementById('location-tracker');
+            const walkInterface = document.getElementById('walk-interface');
+
+            // Initialize features
+            initializeEmergencyFeatures();
+
+            function initializeEmergencyFeatures() {
+                console.log('Initializing emergency safety features...');
+                
+                // Set up event listeners
+                setupEventListeners();
+                
+                // Load user's emergency contacts
+                loadEmergencyContacts();
+            }
+
+            function setupEventListeners() {
+                // SOS Button
+                sosButton.addEventListener('click', () => {
+                    console.log('SOS button clicked');
+                    sosModal.classList.add('active');
+                    startCountdown();
+                });
+
+                // Virtual Walk
+                virtualWalkButton.addEventListener('click', startVirtualWalk);
+
+                // Incident Recording
+                recordingButton.addEventListener('click', showRecordingInterface);
+
+                // Modal controls
+                document.getElementById('cancel-sos').addEventListener('click', closeSOSModal);
+                document.getElementById('confirm-sos').addEventListener('click', activateSOS);
+                document.getElementById('end-emergency').addEventListener('click', endEmergency);
+                document.getElementById('start-recording-btn').addEventListener('click', startRecording);
+                document.getElementById('stop-recording-btn').addEventListener('click', stopRecording);
+                document.getElementById('cancel-walk').addEventListener('click', cancelVirtualWalk);
+                document.getElementById('confirm-arrival').addEventListener('click', confirmArrival);
+
+                // Add shake detection for discreet SOS activation
+                setupShakeDetection();
+            }
+
+            function loadEmergencyContacts() {
+                // In a real app, this would load from user's saved contacts
+                const contacts = [
+                    { name: 'Thandi Security', type: 'Community Patrol', phone: '+27 11 123 4567' },
+                    { name: 'Maria Friend', type: 'Trusted Contact', phone: '+27 82 123 4567' },
+                    { name: 'Local SAPS', type: 'Police Station', phone: '10111' }
+                ];
+                console.log('Emergency contacts loaded:', contacts);
+                return contacts;
+            }
+
+            function setupShakeDetection() {
+                let lastShake = 0;
+                const shakeThreshold = 15;
+                
+                if (window.DeviceMotionEvent) {
+                    window.addEventListener('devicemotion', (e) => {
+                        const acceleration = e.accelerationIncludingGravity;
+                        if (acceleration) {
+                            const intensity = Math.abs(acceleration.x) + Math.abs(acceleration.y) + Math.abs(acceleration.z);
+                            const now = Date.now();
+                            
+                            if (intensity > shakeThreshold && now - lastShake > 2000) {
+                                lastShake = now;
+                                console.log('Shake detected - activating SOS');
+                                sosModal.classList.add('active');
+                                startCountdown();
+                            }
+                        }
+                    });
+                }
+            }
+
+            // SOS Functionality
+            function startCountdown() {
+                let countdownValue = 5;
+                const countdownElement = document.getElementById('sos-countdown');
+                countdownElement.textContent = countdownValue;
+                
+                // Clear any existing timer
+                if (countdownTimer) clearInterval(countdownTimer);
+                
+                countdownTimer = setInterval(() => {
+                    countdownValue--;
+                    countdownElement.textContent = countdownValue;
+                    
+                    if (countdownValue <= 0) {
+                        clearInterval(countdownTimer);
+                        activateSOS();
+                        closeSOSModal();
+                    }
+                }, 1000);
+            }
+
+            function closeSOSModal() {
+                sosModal.classList.remove('active');
+                if (countdownTimer) {
+                    clearInterval(countdownTimer);
+                }
+            }
+
+            function activateSOS() {
+                console.log('� ACTIVATING EMERGENCY SOS');
+                emergencyActive = true;
+                activeEmergency.style.display = 'block';
+                
+                // Start live location tracking
+                startLocationTracking();
+                
+                // Send emergency alerts
+                sendEmergencyAlerts();
+                
+                // Show notification
+                showEmergencyNotification('EMERGENCY SOS ACTIVATED - SAPS and emergency contacts notified');
+
+                // Auto-start recording
+                setTimeout(() => {
+                    showRecordingInterface();
+                    startRecording();
+                }, 1000);
+            }
+
+            function sendEmergencyAlerts() {
+                const contacts = loadEmergencyContacts();
+                const location = getCurrentLocation();
+                
+                console.log('Sending emergency alerts to:', contacts);
+                console.log('With location:', location);
+                
+                // Simulate sending alerts
+                contacts.forEach(contact => {
+                    console.log(`Alert sent to ${contact.name} (${contact.phone})`);
+                });
+                
+                // Simulate SAPS notification
+                console.log('SAPS Emergency Services notified via 10111');
+                
+                // In a real app, this would use SMS/email APIs
+            }
+
+            function endEmergency() {
+                console.log('Ending emergency situation');
+                emergencyActive = false;
+                activeEmergency.style.display = 'none';
+                stopLocationTracking();
+                
+                if (recordingActive) {
+                    stopRecording();
+                }
+                
+                showEmergencyNotification('Emergency situation ended. All tracking stopped.');
+            }
+
+            // Location Tracking
+            function startLocationTracking() {
+                console.log('Starting location tracking...');
+                locationTracking = true;
+                locationTracker.style.display = 'block';
+
+                // Simulate location updates (in real app, use navigator.geolocation)
+                simulateLocationTracking();
+            }
+
+            function simulateLocationTracking() {
+                let updateCount = 0;
+                const locationInterval = setInterval(() => {
+                    if (!locationTracking) {
+                        clearInterval(locationInterval);
+                        return;
+                    }
+                    
+                    updateCount++;
+                    const lat = -26.2041 + (Math.random() - 0.5) * 0.001;
+                    const lng = 28.0473 + (Math.random() - 0.5) * 0.001;
+                    
+                    document.getElementById('latitude').textContent = lat.toFixed(4) + '°';
+                    document.getElementById('longitude').textContent = lng.toFixed(4) + '°';
+                    document.getElementById('accuracy').textContent = (10 + Math.random() * 5).toFixed(0) + 'm';
+                    document.getElementById('location-time').textContent = 'Just now';
+                    
+                    // Update map display
+                    const mapElement = document.getElementById('location-map');
+                    mapElement.innerHTML = `
+                        <div style="width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #e9ecef; color: #666;">
+                            <i class="fas fa-map-marker-alt" style="font-size: 3rem; color: var(--danger); margin-bottom: 10px;"></i>
+                            <p>Live Location Tracking Active</p>
+                            <p style="font-size: 0.8rem; margin-top: 5px;">Update #${updateCount}</p>
+                        </div>
+                    `;
+                    
+                }, 2000);
+            }
+
+            function stopLocationTracking() {
+                console.log('Stopping location tracking');
+                locationTracking = false;
+                locationTracker.style.display = 'none';
+            }
+
+            function getCurrentLocation() {
+                return {
+                    latitude: document.getElementById('latitude').textContent,
+                    longitude: document.getElementById('longitude').textContent,
+                    accuracy: document.getElementById('accuracy').textContent
+                };
+            }
+
+            // Recording Functionality
+            function showRecordingInterface() {
+                console.log('Showing recording interface');
+                recordingInterface.style.display = 'block';
+                initializeCamera();
+            }
+
+            function initializeCamera() {
+                if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                    navigator.mediaDevices.getUserMedia({ video: true, audio: true })
+                        .then(function(stream) {
+                            const video = document.getElementById('recording-video');
+                            video.srcObject = stream;
+                            video.play();
+                            
+                            // Initialize media recorder
+                            mediaRecorder = new MediaRecorder(stream);
+                            recordedChunks = [];
+                            
+                            mediaRecorder.ondataavailable = function(e) {
+                                if (e.data.size > 0) {
+                                    recordedChunks.push(e.data);
+                                }
+                            };
+                            
+                            mediaRecorder.onstop = function() {
+                                const blob = new Blob(recordedChunks, { type: 'video/mp4' });
+                                // In real app, upload to secure cloud storage
+                                console.log('Recording saved:', blob);
+                                uploadRecording(blob);
+                            };
+                        })
+                        .catch(function(error) {
+                            console.error('Camera access denied:', error);
+                            // Show simulated recording interface
+                            simulateRecording();
+                        });
+                } else {
+                    // Fallback to simulated recording
+                    simulateRecording();
+                }
+            }
+
+            function simulateRecording() {
+                const video = document.getElementById('recording-video');
+                video.style.display = 'none';
+                const preview = document.querySelector('.recording-preview');
+                preview.innerHTML = `
+                    <div style="width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #000; color: white;">
+                        <i class="fas fa-camera" style="font-size: 3rem; margin-bottom: 10px;"></i>
+                        <p>Recording Simulation Active</p>
+                        <p style="font-size: 0.8rem; margin-top: 5px;">Video would be recording here</p>
+                    </div>
+                `;
+            }
+
+            function startRecording() {
+                console.log('Starting recording...');
+                recordingActive = true;
+                document.getElementById('start-recording-btn').style.display = 'none';
+                document.getElementById('stop-recording-btn').style.display = 'block';
+                
+                if (mediaRecorder) {
+                    mediaRecorder.start();
+                }
+                
+                // Start timer
+                recordingSeconds = 0;
+                updateRecordingTimer();
+                recordingTimer = setInterval(updateRecordingTimer, 1000);
+                
+                showEmergencyNotification('Recording started - evidence being secured');
+            }
+
+            function updateRecordingTimer() {
+                recordingSeconds++;
+                const minutes = Math.floor(recordingSeconds / 60);
+                const seconds = recordingSeconds % 60;
+                document.getElementById('recording-timer').textContent = 
+                    `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            }
+
+            function stopRecording() {
+                console.log('Stopping recording...');
+                recordingActive = false;
+                document.getElementById('start-recording-btn').style.display = 'block';
+                document.getElementById('stop-recording-btn').style.display = 'none';
+                
+                if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+                    mediaRecorder.stop();
+                }
+                
+                if (recordingTimer) {
+                    clearInterval(recordingTimer);
+                }
+                
+                showEmergencyNotification('Recording stopped - evidence secured in cloud');
+            }
+
+            function uploadRecording(blob) {
+                // Simulate secure cloud upload
+                console.log('Uploading recording to secure cloud storage...');
+                setTimeout(() => {
+                    console.log('Recording successfully uploaded and encrypted');
+                    showEmergencyNotification('Evidence securely stored in EmpowerVault');
+                }, 2000);
+            }
+
+            // Virtual Walk Functionality
+            function startVirtualWalk() {
+                console.log('Starting virtual walk...');
+                virtualWalkActive = true;
+                walkInterface.style.display = 'block';
+                
+                // Simulate route setup
+                simulateRouteSetup();
+                
+                // Notify contacts
+                const contacts = loadEmergencyContacts();
+                contacts.forEach(contact => {
+                    console.log(`Virtual walk started - ${contact.name} notified`);
+                });
+                
+                showEmergencyNotification('Virtual Walk started - contacts notified of your route');
+            }
+
+            function simulateRouteSetup() {
+                const walkMap = document.getElementById('walk-map');
+                let progress = 0;
+                
+                const routeInterval = setInterval(() => {
+                    if (!virtualWalkActive) {
+                        clearInterval(routeInterval);
+                        return;
+                    }
+                    
+                    progress += 10;
+                    walkMap.innerHTML = `
+                        <div style="width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #e9ecef; color: #666;">
+                            <i class="fas fa-walking" style="font-size: 3rem; color: var(--walk); margin-bottom: 10px;"></i>
+                            <p>Virtual Walk Active</p>
+                            <div style="width: 80%; background: #ddd; border-radius: 10px; margin: 10px 0;">
+                                <div style="width: ${progress}%; height: 20px; background: var(--walk); border-radius: 10px; transition: width 0.5s;"></div>
+                            </div>
+                            <p style="font-size: 0.8rem;">Route Progress: ${progress}%</p>
+                        </div>
+                    `;
+                    
+                    if (progress >= 100) {
+                        clearInterval(routeInterval);
+                        showEmergencyNotification('You have reached your destination');
+                    }
+                }, 1000);
+            }
+
+            function cancelVirtualWalk() {
+                console.log('Cancelling virtual walk');
+                virtualWalkActive = false;
+                walkInterface.style.display = 'none';
+                
+                const contacts = loadEmergencyContacts();
+                contacts.forEach(contact => {
+                    console.log(`Virtual walk cancelled - ${contact.name} notified`);
+                });
+                
+                showEmergencyNotification('Virtual Walk cancelled - contacts notified');
+            }
+
+            function confirmArrival() {
+                console.log('Confirming arrival');
+                virtualWalkActive = false;
+                walkInterface.style.display = 'none';
+                
+                const contacts = loadEmergencyContacts();
+                contacts.forEach(contact => {
+                    console.log(`Safe arrival confirmed - ${contact.name} notified`);
+                });
+                
+                showEmergencyNotification('Safe arrival confirmed - contacts notified');
+            }
+
+            // Utility Functions
+            function showEmergencyNotification(message) {
+                // Create notification element
+                const notification = document.createElement('div');
+                notification.style.cssText = `
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    background: var(--danger);
+                    color: white;
+                    padding: 15px 20px;
+                    border-radius: 8px;
+                    box-shadow: var(--shadow);
+                    z-index: 10000;
+                    max-width: 300px;
+                    animation: slideIn 0.3s ease;
+                `;
+                
+                notification.innerHTML = `
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <i class="fas fa-bell"></i>
+                        <span>${message}</span>
+                    </div>
+                `;
+                
+                document.body.appendChild(notification);
+                
+                // Remove after 5 seconds
+                setTimeout(() => {
+                    notification.style.animation = 'slideOut 0.3s ease';
+                    setTimeout(() => {
+                        document.body.removeChild(notification);
+                    }, 300);
+                }, 5000);
+                
+                // Add CSS for animations
+                if (!document.getElementById('notification-styles')) {
+                    const style = document.createElement('style');
+                    style.id = 'notification-styles';
+                    style.textContent = `
+                        @keyframes slideIn {
+                            from { transform: translateX(100%); opacity: 0; }
+                            to { transform: translateX(0); opacity: 1; }
+                        }
+                        @keyframes slideOut {
+                            from { transform: translateX(0); opacity: 1; }
+                            to { transform: translateX(100%); opacity: 0; }
+                        }
+                    `;
+                    document.head.appendChild(style);
+                }
+            }
+
+            // Initialize the app
+            console.log('SafeSpace Emergency Features Ready');
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to SafeSpace Studio</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #6C63FF;
+            --primary-light: #8E85FF;
+            --primary-dark: #5B52EE;
+            --secondary: #FF6584;
+            --success: #4CAF50;
+            --warning: #FFC107;
+            --danger: #F44336;
+            --text: #333333;
+            --text-light: #666666;
+            --text-lighter: #999999;
+            --bg: #f8f9fa;
+            --card-bg: #ffffff;
+            --border: #e0e0e0;
+            --shadow: 0 4px 12px rgba(0,0,0,0.08);
+            --shadow-hover: 0 8px 24px rgba(0,0,0,0.12);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        /* Emergency Exit */
+        .emergency-exit {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1001;
+        }
+
+        .btn-emergency {
+            background: var(--danger);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .btn-emergency:hover {
+            background: #d32f2f;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        /* Main Container */
+        .auth-container {
+            max-width: 900px;
+            width: 100%;
+            margin: 2rem auto;
+            padding: 2.5rem;
+            background-color: var(--card-bg);
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            animation: fadeIn 0.8s ease-out;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .auth-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+        }
+
+        .logo-container {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .logo {
+            height: 90px;
+            width: auto;
+            margin-bottom: 1rem;
+            transition: transform 0.5s ease;
+        }
+
+        .logo:hover {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .logo-container h1 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .logo-container p {
+            color: var(--text-light);
+            font-size: 1.1rem;
+        }
+
+        .auth-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+            justify-content: center;
+        }
+
+        .auth-card {
+            flex: 1;
+            min-width: 320px;
+            padding: 2.5rem;
+            border-radius: 16px;
+            background: white;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .auth-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--primary-light));
+        }
+
+        .auth-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .auth-card h2 {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--primary);
+            text-align: center;
+        }
+
+        .auth-divider {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            margin: 1.5rem 0;
+        }
+
+        .auth-divider span {
+            background: var(--card-bg);
+            padding: 0 1.5rem;
+            z-index: 1;
+            color: var(--text-light);
+            font-weight: 500;
+        }
+
+        .auth-divider::before {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: var(--border);
+        }
+
+        /* Buttons */
+        .btn-primary {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 10px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: 0 4px 10px rgba(108, 99, 255, 0.3);
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(108, 99, 255, 0.4);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        .btn-biometric {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 10px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: 0 4px 10px rgba(108, 99, 255, 0.3);
+        }
+
+        .btn-biometric:hover {
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(108, 99, 255, 0.4);
+        }
+
+        .btn-biometric:active {
+            transform: translateY(0);
+        }
+
+        /* Form Elements */
+        .form-group {
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--text);
+            transition: var(--transition);
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            font-size: 16px;
+            transition: var(--transition);
+            background: #fafafa;
+        }
+
+        .form-group input:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.1);
+            background: white;
+        }
+
+        .form-group input:valid {
+            border-color: var(--success);
+        }
+
+        .name-group {
+            display: flex;
+            gap: 15px;
+        }
+
+        .name-group .form-group {
+            flex: 1;
+        }
+
+        /* Password Strength Indicator */
+        .password-strength {
+            margin-top: 8px;
+            display: none;
+        }
+
+        .strength-bar {
+            height: 6px;
+            width: 0;
+            background: #F44336;
+            border-radius: 3px;
+            transition: width 0.3s ease, background 0.3s ease;
+        }
+
+        .strength-text {
+            font-size: 0.8rem;
+            color: var(--text-light);
+            display: block;
+            margin-top: 5px;
+        }
+
+        /* Loading Animation */
+        .loading-spinner {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        /* MFA Styles */
+        .mfa-container, .mfa-setup-container, .registration-container {
+            display: none;
+            text-align: center;
+        }
+
+        .mfa-code-input {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 25px 0;
+        }
+
+        .mfa-code-input input {
+            width: 50px;
+            height: 60px;
+            text-align: center;
+            font-size: 24px;
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            transition: var(--transition);
+        }
+
+        .mfa-code-input input:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.1);
+        }
+
+        .mfa-options {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .mfa-option {
+            padding: 20px;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: var(--transition);
+            text-align: left;
+        }
+
+        .mfa-option:hover {
+            background-color: rgba(108, 99, 255, 0.05);
+            border-color: var(--primary);
+        }
+
+        .mfa-option.selected {
+            background-color: rgba(108, 99, 255, 0.1);
+            border-color: var(--primary);
+        }
+
+        .qr-code {
+            margin: 20px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 12px;
+            display: inline-block;
+            box-shadow: var(--shadow);
+        }
+
+        .backup-codes {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+            font-family: monospace;
+            text-align: center;
+            border: 1px solid var(--border);
+        }
+
+        /* Personalized Welcome */
+        .personalized-welcome {
+            display: none;
+            text-align: center;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: rgba(108, 99, 255, 0.1);
+            border-radius: 12px;
+            color: var(--primary);
+            font-weight: 500;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        /* Links and Additional Info */
+        .privacy-note {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            margin-top: 1rem;
+            text-align: center;
+            line-height: 1.5;
+        }
+
+        .recovery-link {
+            text-align: center;
+            margin-top: 1.5rem;
+        }
+
+        .recovery-link a {
+            color: var(--primary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: var(--transition);
+        }
+
+        .recovery-link a:hover {
+            text-decoration: underline;
+            color: var(--primary-dark);
+        }
+
+        .toggle-auth {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .toggle-auth a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        .toggle-auth a:hover {
+            text-decoration: underline;
+            color: var(--primary-dark);
+        }
+
+        .device-support {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 15px;
+            padding: 10px;
+            background: rgba(108, 99, 255, 0.05);
+            border-radius: 8px;
+            font-size: 0.85rem;
+            color: var(--text-light);
+        }
+
+        .crisis-support {
+            text-align: center;
+            margin-top: 2.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .crisis-support a {
+            color: var(--secondary);
+            font-weight: 500;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .crisis-support a:hover {
+            text-decoration: underline;
+            color: #e05573;
+        }
+
+        .auth-footer {
+            text-align: center;
+            margin-top: 2rem;
+            color: var(--text-light);
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .auth-footer a {
+            color: var(--primary);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .auth-footer a:hover {
+            text-decoration: underline;
+            color: var(--primary-dark);
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .auth-container {
+                padding: 1.5rem;
+            }
+            
+            .auth-card {
+                min-width: 100%;
+                padding: 1.5rem;
+            }
+            
+            .name-group {
+                flex-direction: column;
+                gap: 0;
+            }
+            
+            .logo-container h1 {
+                font-size: 1.8rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+            
+            .auth-container {
+                padding: 1rem;
+            }
+            
+            .logo {
+                height: 70px;
+            }
+            
+            .mfa-code-input input {
+                width: 40px;
+                height: 50px;
+            }
+        }
+    </style>
+</head>
+<body class="trauma-informed">
+    <!-- Emergency Exit - More discreet but still accessible -->
+    <div class="emergency-exit">
+        <a href="https://www.google.com" class="btn-emergency">
+            <i class="fas fa-running"></i>
+            <span>Quick Exit</span>
+        </a>
+    </div>
+    
+    <main class="auth-container">
+        <div class="logo-container">
+            <!-- Updated Logo with SVG for crisp display -->
+            <svg class="logo" width="80" height="80" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="50" cy="50" r="45" fill="#6C63FF" fill-opacity="0.1" stroke="#6C63FF" stroke-width="2"/>
+                <path d="M50 30L60 45H40L50 60L60 75L70 60H80L70 45H80L70 30H50Z" fill="#6C63FF"/>
+                <circle cx="50" cy="50" r="15" fill="white"/>
+                <path d="M50 40L55 50L50 60L45 50L50 40Z" fill="#6C63FF"/>
+            </svg>
+            <h1>SafeSpace Studio</h1>
+            <p>Your secure space for healing and growth</p>
+        </div>
+        
+        <!-- Personalized Welcome -->
+        <div class="personalized-welcome" id="personalized-welcome">
+            Welcome back, <span id="welcome-name"></span>!
+        </div>
+        
+        <!-- Login Form -->
+        <div class="auth-options" id="login-container">
+            <div class="auth-card" id="passphrase-auth">
+                <h2>Passphrase Access</h2>
+                <form id="passphrase-form">
+                    <div class="form-group">
+                        <label for="user-id">User ID</label>
+                        <input type="text" id="user-id" required placeholder="Enter your user ID">
+                    </div>
+                    <div class="form-group">
+                        <label for="passphrase">Passphrase</label>
+                        <input type="password" id="passphrase" required placeholder="Enter your passphrase">
+                        <div class="password-strength" id="password-strength">
+                            <div class="strength-bar"></div>
+                            <span class="strength-text"></span>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-primary" id="login-btn">
+                        <span>Enter SafeSpace</span>
+                        <div class="loading-spinner" id="login-spinner"></div>
+                    </button>
+                </form>
+                <p class="recovery-link"><a href="recovery.html">Forgot passphrase?</a></p>
+                <div class="toggle-auth">
+                    <p>Don't have an account? <a href="#" id="show-registration">Create account</a></p>
+                </div>
+            </div>
+            
+            <div class="auth-divider">
+                <span>or</span>
+            </div>
+            
+            <div class="auth-card" id="biometric-auth">
+                <h2>Biometric Access</h2>
+                <button id="biometric-btn" class="btn-biometric">
+                    <i class="fas fa-fingerprint"></i>
+                    <span>Authenticate</span>
+                    <div class="loading-spinner" id="bio-spinner"></div>
+                </button>
+                <p class="privacy-note">Your biometric data never leaves your device and is not stored on our servers.</p>
+                <div class="device-support" id="device-support">
+                    <i class="fas fa-info-circle"></i>
+                    <span>Using device biometrics (Face ID/Touch ID/Fingerprint)</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Registration Form -->
+        <div class="registration-container" id="registration-container">
+            <div class="auth-card">
+                <h2>Create Your Account</h2>
+                <form id="registration-form">
+                    <div class="name-group">
+                        <div class="form-group">
+                            <label for="first-name">First Name</label>
+                            <input type="text" id="first-name" required placeholder="Enter your first name">
+                        </div>
+                        <div class="form-group">
+                            <label for="last-name">Last Name</label>
+                            <input type="text" id="last-name" required placeholder="Enter your last name">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" required placeholder="Enter your email">
+                    </div>
+                    <div class="form-group">
+                        <label for="new-user-id">Choose User ID</label>
+                        <input type="text" id="new-user-id" required placeholder="Choose a user ID">
+                    </div>
+                    <div class="form-group">
+                        <label for="new-passphrase">Create Passphrase</label>
+                        <input type="password" id="new-passphrase" required placeholder="Create a secure passphrase">
+                        <div class="password-strength" id="registration-password-strength">
+                            <div class="strength-bar"></div>
+                            <span class="strength-text"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="confirm-passphrase">Confirm Passphrase</label>
+                        <input type="password" id="confirm-passphrase" required placeholder="Confirm your passphrase">
+                    </div>
+                    <button type="submit" class="btn-primary" id="register-btn">
+                        <span>Create Account</span>
+                        <div class="loading-spinner" id="register-spinner"></div>
+                    </button>
+                </form>
+                <div class="toggle-auth">
+                    <p>Already have an account? <a href="#" id="show-login">Sign in</a></p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- MFA Setup -->
+        <div class="mfa-setup-container" id="mfa-setup-container">
+            <div class="auth-card">
+                <h2>Secure Your Account</h2>
+                <p>Set up two-factor authentication for enhanced security</p>
+                
+                <div class="mfa-options">
+                    <div class="mfa-option selected" id="mfa-app-option">
+                        <h3>Authenticator App</h3>
+                        <p>Use an app like Google Authenticator or Authy</p>
+                        <div class="qr-code" id="qr-code">
+                            <!-- QR code would be generated here -->
+                            <div style="width: 200px; height: 200px; background: #f0f0f0; display: flex; align-items: center; justify-content: center; border-radius: 8px;">
+                                <i class="fas fa-qrcode" style="font-size: 3rem; color: #ccc;"></i>
+                            </div>
+                        </div>
+                        <p>Scan this QR code with your authenticator app</p>
+                    </div>
+                    
+                    <div class="mfa-option" id="mfa-sms-option">
+                        <h3>SMS Verification</h3>
+                        <p>Receive codes via text message</p>
+                        <div class="form-group">
+                            <label for="phone-number">Phone Number</label>
+                            <input type="tel" id="phone-number" placeholder="Enter your phone number">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="backup-codes">
+                    <h4>Backup Codes</h4>
+                    <p>Save these codes in a secure place. You can use them if you lose access to your authentication method.</p>
+                    <div id="backup-codes-list">
+                        <!-- Backup codes would be generated here -->
+                        <div>ABCD-EFGH</div>
+                        <div>IJKL-MNOP</div>
+                        <div>QRST-UVWX</div>
+                        <div>YZ12-3456</div>
+                    </div>
+                </div>
+                
+                <button type="button" class="btn-primary" id="complete-mfa-setup">
+                    Complete Setup
+                </button>
+            </div>
+        </div>
+        
+        <!-- MFA Verification -->
+        <div class="mfa-container" id="mfa-container">
+            <div class="auth-card">
+                <h2>Two-Factor Authentication</h2>
+                <p>Enter the verification code from your authenticator app</p>
+                
+                <div class="mfa-code-input">
+                    <input type="text" maxlength="1" id="mfa-code-1">
+                    <input type="text" maxlength="1" id="mfa-code-2">
+                    <input type="text" maxlength="1" id="mfa-code-3">
+                    <input type="text" maxlength="1" id="mfa-code-4">
+                    <input type="text" maxlength="1" id="mfa-code-5">
+                    <input type="text" maxlength="1" id="mfa-code-6">
+                </div>
+                
+                <button type="button" class="btn-primary" id="verify-mfa">
+                    Verify
+                </button>
+                
+                <div class="recovery-link">
+                    <a href="#" id="use-backup-code">Use a backup code instead</a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="crisis-support">
+            <p>Need immediate help? <a href="support.html">Contact our crisis support team</a> - available 24/7</p>
+        </div>
+    </main>
+    
+    <footer class="auth-footer">
+        <p>By continuing, you agree to our <a href="privacy.html">Privacy Policy</a> and <a href="terms.html">Terms of Service</a>.</p>
+        <p>SafeSpace Studio uses end-to-end encryption to protect your data.</p>
+    </footer>
+    
+    <script>
+        // User storage simulation (in a real app, this would be server-side)
+        const userDatabase = JSON.parse(localStorage.getItem('safeSpaceUsers') || '{}');
+        const userSessions = JSON.parse(localStorage.getItem('safeSpaceSessions') || '{}');
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check for biometric support
+            if (window.PublicKeyCredential) {
+                document.getElementById('device-support').style.display = 'flex';
+            } else {
+                document.getElementById('device-support').style.display = 'none';
+                document.getElementById('biometric-btn').disabled = true;
+                document.getElementById('biometric-btn').style.opacity = '0.7';
+                document.getElementById('biometric-btn').title = 'Biometrics not supported on this device';
+            }
+
+            // Check if user is returning and show personalized welcome
+            checkReturningUser();
+
+            // Form submission with loading state
+            const loginForm = document.getElementById('passphrase-form');
+            const loginBtn = document.getElementById('login-btn');
+            const loginSpinner = document.getElementById('login-spinner');
+            
+            loginForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const userId = document.getElementById('user-id').value;
+                const passphrase = document.getElementById('passphrase').value;
+                
+                // Simple validation
+                if (!userId || !passphrase) {
+                    showNotification('Please enter both User ID and Passphrase', 'error');
+                    return;
+                }
+                
+                // Show loading state
+                loginBtn.disabled = true;
+                loginSpinner.style.display = 'inline-block';
+                loginBtn.querySelector('span').textContent = 'Authenticating...';
+                
+                // Authenticate user
+                authenticateUser(userId, passphrase);
+            });
+
+            // Registration form
+            const registrationForm = document.getElementById('registration-form');
+            const registerBtn = document.getElementById('register-btn');
+            const registerSpinner = document.getElementById('register-spinner');
+            
+            registrationForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const firstName = document.getElementById('first-name').value;
+                const lastName = document.getElementById('last-name').value;
+                const email = document.getElementById('email').value;
+                const userId = document.getElementById('new-user-id').value;
+                const passphrase = document.getElementById('new-passphrase').value;
+                const confirmPassphrase = document.getElementById('confirm-passphrase').value;
+                
+                // Validation
+                if (!firstName || !lastName || !email || !userId || !passphrase) {
+                    showNotification('Please fill in all fields', 'error');
+                    return;
+                }
+                
+                if (passphrase !== confirmPassphrase) {
+                    showNotification('Passphrases do not match', 'error');
+                    return;
+                }
+                
+                if (userDatabase[userId]) {
+                    showNotification('User ID already exists. Please choose a different one.', 'error');
+                    return;
+                }
+                
+                // Show loading state
+                registerBtn.disabled = true;
+                registerSpinner.style.display = 'inline-block';
+                registerBtn.querySelector('span').textContent = 'Creating Account...';
+                
+                // Create user account
+                createUserAccount(firstName, lastName, email, userId, passphrase);
+            });
+
+            // Biometric authentication
+            const bioBtn = document.getElementById('biometric-btn');
+            const bioSpinner = document.getElementById('bio-spinner');
+            
+            bioBtn.addEventListener('click', function() {
+                if (bioBtn.disabled) return;
+                
+                bioBtn.disabled = true;
+                bioSpinner.style.display = 'inline-block';
+                bioBtn.querySelector('span').textContent = 'Verifying...';
+                
+                // Simulate biometric authentication
+                setTimeout(function() {
+                    if (window.PublicKeyCredential) {
+                        // In a real app, you would use the Web Authentication API:
+                        // navigator.credentials.get({ publicKey: {...} })
+                        //   .then(credential => verifyWithServer(credential))
+                        //   .catch(error => handleError(error));
+                        
+                        // For demo, we'll simulate success
+                        simulateBiometricLogin();
+                    }
+                }, 1000);
+            });
+
+            // Password strength indicator
+            const passphraseInput = document.getElementById('passphrase');
+            const passwordStrength = document.getElementById('password-strength');
+            
+            passphraseInput.addEventListener('input', function() {
+                const password = this.value;
+                if (password.length > 0) {
+                    passwordStrength.style.display = 'block';
+                    const strength = calculatePasswordStrength(password);
+                    updateStrengthIndicator(strength, passwordStrength);
+                } else {
+                    passwordStrength.style.display = 'none';
+                }
+            });
+            
+            // Registration password strength indicator
+            const newPassphraseInput = document.getElementById('new-passphrase');
+            const registrationPasswordStrength = document.getElementById('registration-password-strength');
+            
+            newPassphraseInput.addEventListener('input', function() {
+                const password = this.value;
+                if (password.length > 0) {
+                    registrationPasswordStrength.style.display = 'block';
+                    const strength = calculatePasswordStrength(password);
+                    updateStrengthIndicator(strength, registrationPasswordStrength);
+                } else {
+                    registrationPasswordStrength.style.display = 'none';
+                }
+            });
+            
+            // MFA verification
+            const verifyMfaBtn = document.getElementById('verify-mfa');
+            verifyMfaBtn.addEventListener('click', function() {
+                const code = getMfaCode();
+                if (code.length === 6) {
+                    verifyMfaCode(code);
+                } else {
+                    showNotification('Please enter the complete 6-digit code', 'error');
+                }
+            });
+            
+            // MFA code input navigation
+            setupMfaCodeInput();
+            
+            // Toggle between login and registration
+            document.getElementById('show-registration').addEventListener('click', function(e) {
+                e.preventDefault();
+                document.getElementById('login-container').style.display = 'none';
+                document.getElementById('registration-container').style.display = 'block';
+            });
+            
+            document.getElementById('show-login').addEventListener('click', function(e) {
+                e.preventDefault();
+                document.getElementById('registration-container').style.display = 'none';
+                document.getElementById('login-container').style.display = 'flex';
+            });
+            
+            // Complete MFA setup
+            document.getElementById('complete-mfa-setup').addEventListener('click', function() {
+                // In a real app, you would save MFA preferences to the user's account
+                const userId = sessionStorage.getItem('currentUserId');
+                if (userId && userDatabase[userId]) {
+                    userDatabase[userId].mfaEnabled = true;
+                    localStorage.setItem('safeSpaceUsers', JSON.stringify(userDatabase));
+                    
+                    // Store session
+                    userSessions[userId] = {
+                        lastLogin: new Date().toISOString(),
+                        firstName: userDatabase[userId].firstName
+                    };
+                    localStorage.setItem('safeSpaceSessions', JSON.stringify(userSessions));
+                    
+                    // Show success message
+                    showNotification('Account created successfully! Redirecting to dashboard...', 'success');
+                    
+                    // Redirect to dashboard after a short delay
+                    setTimeout(() => {
+                        window.location.href = 'dashboard.html';
+                    }, 1500);
+                }
+            });
+            
+            // Use backup code
+            document.getElementById('use-backup-code').addEventListener('click', function(e) {
+                e.preventDefault();
+                const backupCode = prompt('Enter your backup code:');
+                if (backupCode) {
+                    // In a real app, you would verify the backup code
+                    // For demo, we'll accept any non-empty code
+                    if (backupCode.trim() !== '') {
+                        const userId = sessionStorage.getItem('currentUserId');
+                        if (userId && userDatabase[userId]) {
+                            // Store session
+                            userSessions[userId] = {
+                                lastLogin: new Date().toISOString(),
+                                firstName: userDatabase[userId].firstName
+                            };
+                            localStorage.setItem('safeSpaceSessions', JSON.stringify(userSessions));
+                            
+                            // Redirect to dashboard
+                            window.location.href = 'dashboard.html';
+                        }
+                    } else {
+                        showNotification('Invalid backup code', 'error');
+                    }
+                }
+            });
+            
+            // MFA option selection
+            document.querySelectorAll('.mfa-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    document.querySelectorAll('.mfa-option').forEach(opt => {
+                        opt.classList.remove('selected');
+                    });
+                    this.classList.add('selected');
+                });
+            });
+            
+            function calculatePasswordStrength(password) {
+                let strength = 0;
+                
+                // Length check
+                if (password.length > 10) strength += 2;
+                else if (password.length > 6) strength += 1;
+                
+                // Character variety
+                if (/[A-Z]/.test(password)) strength += 1;
+                if (/[0-9]/.test(password)) strength += 1;
+                if (/[^A-Za-z0-9]/.test(password)) strength += 1;
+                
+                return Math.min(strength, 4);
+            }
+            
+            function updateStrengthIndicator(strength, container) {
+                const strengthBar = container.querySelector('.strength-bar');
+                const strengthText = container.querySelector('.strength-text');
+                
+                const strengthLabels = ['Very Weak', 'Weak', 'Moderate', 'Strong', 'Very Strong'];
+                const strengthColors = ['#F44336', '#FF9800', '#FFC107', '#4CAF50', '#2E7D32'];
+                
+                strengthBar.style.width = `${(strength / 4) * 100}%`;
+                strengthBar.style.backgroundColor = strengthColors[strength];
+                strengthText.textContent = strengthLabels[strength];
+                strengthText.style.color = strengthColors[strength];
+            }
+            
+            function authenticateUser(userId, passphrase) {
+                // In a real app, you would hash the password and send to server
+                // For demo, we're storing passwords in plain text (NOT recommended for production)
+                
+                if (userDatabase[userId] && userDatabase[userId].passphrase === passphrase) {
+                    // Store current user ID in session storage for MFA step
+                    sessionStorage.setItem('currentUserId', userId);
+                    
+                    // Check if MFA is enabled for this user
+                    if (userDatabase[userId].mfaEnabled) {
+                        // Show MFA verification
+                        document.getElementById('login-container').style.display = 'none';
+                        document.getElementById('mfa-container').style.display = 'block';
+                        showNotification('Please complete two-factor authentication', 'info');
+                    } else {
+                        // Store session and redirect
+                        userSessions[userId] = {
+                            lastLogin: new Date().toISOString(),
+                            firstName: userDatabase[userId].firstName
+                        };
+                        localStorage.setItem('safeSpaceSessions', JSON.stringify(userSessions));
+                        
+                        // Show success message
+                        showNotification('Login successful! Redirecting to dashboard...', 'success');
+                        
+                        // Redirect to dashboard after a short delay
+                        setTimeout(() => {
+                            window.location.href = 'dashboard.html';
+                        }, 1500);
+                    }
+                } else {
+                    showNotification('Invalid User ID or Passphrase', 'error');
+                    resetLoginButton();
+                }
+            }
+            
+            function createUserAccount(firstName, lastName, email, userId, passphrase) {
+                // In a real app, you would hash the password before storing
+                // For demo, we're storing in plain text (NOT recommended for production)
+                
+                userDatabase[userId] = {
+                    firstName,
+                    lastName,
+                    email,
+                    passphrase,
+                    mfaEnabled: false,
+                    createdAt: new Date().toISOString()
+                };
+                
+                localStorage.setItem('safeSpaceUsers', JSON.stringify(userDatabase));
+                
+                // Store current user ID for MFA setup
+                sessionStorage.setItem('currentUserId', userId);
+                
+                // Show MFA setup
+                document.getElementById('registration-container').style.display = 'none';
+                document.getElementById('mfa-setup-container').style.display = 'block';
+                
+                // Reset registration button
+                registerBtn.disabled = false;
+                registerSpinner.style.display = 'none';
+                registerBtn.querySelector('span').textContent = 'Create Account';
+                
+                showNotification('Account created! Please set up two-factor authentication.', 'success');
+            }
+            
+            function resetLoginButton() {
+                loginBtn.disabled = false;
+                loginSpinner.style.display = 'none';
+                loginBtn.querySelector('span').textContent = 'Enter SafeSpace';
+            }
+            
+            function setupMfaCodeInput() {
+                const inputs = document.querySelectorAll('.mfa-code-input input');
+                
+                inputs.forEach((input, index) => {
+                    input.addEventListener('input', function() {
+                        if (this.value.length === 1 && index < inputs.length - 1) {
+                            inputs[index + 1].focus();
+                        }
+                    });
+                    
+                    input.addEventListener('keydown', function(e) {
+                        if (e.key === 'Backspace' && this.value.length === 0 && index > 0) {
+                            inputs[index - 1].focus();
+                        }
+                    });
+                });
+            }
+            
+            function getMfaCode() {
+                const inputs = document.querySelectorAll('.mfa-code-input input');
+                let code = '';
+                inputs.forEach(input => {
+                    code += input.value;
+                });
+                return code;
+            }
+            
+            function verifyMfaCode(code) {
+                // In a real app, you would verify the TOTP code with a server
+                // For demo, we'll accept any 6-digit code
+                if (code.length === 6 && /^\d+$/.test(code)) {
+                    const userId = sessionStorage.getItem('currentUserId');
+                    if (userId && userDatabase[userId]) {
+                        // Store session
+                        userSessions[userId] = {
+                            lastLogin: new Date().toISOString(),
+                            firstName: userDatabase[userId].firstName
+                        };
+                        localStorage.setItem('safeSpaceSessions', JSON.stringify(userSessions));
+                        
+                        // Show success message
+                        showNotification('Authentication successful! Redirecting to dashboard...', 'success');
+                        
+                        // Redirect to dashboard after a short delay
+                        setTimeout(() => {
+                            window.location.href = 'dashboard.html';
+                        }, 1500);
+                    }
+                } else {
+                    showNotification('Invalid verification code', 'error');
+                }
+            }
+            
+            function checkReturningUser() {
+                const userId = sessionStorage.getItem('currentUserId') || 
+                              (Object.keys(userSessions).length > 0 ? Object.keys(userSessions)[0] : null);
+                
+                if (userId && userDatabase[userId]) {
+                    document.getElementById('personalized-welcome').style.display = 'block';
+                    document.getElementById('welcome-name').textContent = userDatabase[userId].firstName;
+                    document.getElementById('user-id').value = userId;
+                }
+            }
+            
+            // Notification system
+            function showNotification(message, type) {
+                // Remove any existing notifications
+                const existingNotification = document.querySelector('.notification');
+                if (existingNotification) {
+                    existingNotification.remove();
+                }
+                
+                // Create notification element
+                const notification = document.createElement('div');
+                notification.className = `notification ${type}`;
+                notification.innerHTML = `
+                    <span>${message}</span>
+                    <button class="notification-close"><i class="fas fa-times"></i></button>
+                `;
+                
+                // Add styles for notification
+                const notificationStyles = `
+                    .notification {
+                        position: fixed;
+                        top: 20px;
+                        right: 20px;
+                        padding: 15px 20px;
+                        border-radius: 10px;
+                        color: white;
+                        font-weight: 500;
+                        box-shadow: var(--shadow);
+                        z-index: 1002;
+                        display: flex;
+                        align-items: center;
+                        gap: 10px;
+                        max-width: 400px;
+                        animation: slideInRight 0.3s ease;
+                    }
+                    
+                    .notification.success {
+                        background: var(--success);
+                    }
+                    
+                    .notification.error {
+                        background: var(--danger);
+                    }
+                    
+                    .notification.info {
+                        background: var(--primary);
+                    }
+                    
+                    .notification-close {
+                        background: none;
+                        border: none;
+                        color: white;
+                        cursor: pointer;
+                        font-size: 1rem;
+                    }
+                    
+                    @keyframes slideInRight {
+                        from { transform: translateX(100%); opacity: 0; }
+                        to { transform: translateX(0); opacity: 1; }
+                    }
+                `;
+                
+                // Add styles if not already added
+                if (!document.querySelector('#notification-styles')) {
+                    const styleSheet = document.createElement('style');
+                    styleSheet.id = 'notification-styles';
+                    styleSheet.textContent = notificationStyles;
+                    document.head.appendChild(styleSheet);
+                }
+                
+                document.body.appendChild(notification);
+                
+                // Auto remove after 5 seconds
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.style.animation = 'slideOutRight 0.3s ease';
+                        setTimeout(() => {
+                            if (notification.parentNode) {
+                                notification.remove();
+                            }
+                        }, 300);
+                    }
+                }, 5000);
+                
+                // Close button functionality
+                notification.querySelector('.notification-close').addEventListener('click', function() {
+                    notification.style.animation = 'slideOutRight 0.3s ease';
+                    setTimeout(() => {
+                        if (notification.parentNode) {
+                            notification.remove();
+                        }
+                    }, 300);
+                });
+                
+                // Add slideOutRight animation
+                if (!document.querySelector('#notification-animations')) {
+                    const animationStyles = document.createElement('style');
+                    animationStyles.id = 'notification-animations';
+                    animationStyles.textContent = `
+                        @keyframes slideOutRight {
+                            from { transform: translateX(0); opacity: 1; }
+                            to { transform: translateX(100%); opacity: 0; }
+                        }
+                    `;
+                    document.head.appendChild(animationStyles);
+                }
+            }
+            
+            // Simulate successful biometric login
+            function simulateBiometricLogin() {
+                console.log('Biometric authentication successful');
+                
+                // In a real app, you would:
+                // 1. Verify the biometric assertion with your server
+                // 2. Receive an auth token
+                // 3. Then redirect
+                
+                // For demo, we'll use the first user in the database
+                const userIds = Object.keys(userDatabase);
+                if (userIds.length > 0) {
+                    const userId = userIds[0];
+                    sessionStorage.setItem('currentUserId', userId);
+                    
+                    // Check if MFA is enabled
+                    if (userDatabase[userId].mfaEnabled) {
+                        document.getElementById('login-container').style.display = 'none';
+                        document.getElementById('mfa-container').style.display = 'block';
+                        showNotification('Please complete two-factor authentication', 'info');
+                    } else {
+                        // Store session and redirect
+                        userSessions[userId] = {
+                            lastLogin: new Date().toISOString(),
+                            firstName: userDatabase[userId].firstName
+                        };
+                        localStorage.setItem('safeSpaceSessions', JSON.stringify(userSessions));
+                        
+                        // Show success message
+                        showNotification('Biometric authentication successful! Redirecting to dashboard...', 'success');
+                        
+                        // Redirect to dashboard after a short delay
+                        setTimeout(() => {
+                            window.location.href = 'dashboard.html';
+                        }, 1500);
+                    }
+                } else {
+                    showNotification('No users found. Please create an account first.', 'error');
+                    bioBtn.disabled = false;
+                    bioSpinner.style.display = 'none';
+                    bioBtn.querySelector('span').textContent = 'Authenticate';
+                }
+            }
+        });
+    </script>
+</body>
+</html>

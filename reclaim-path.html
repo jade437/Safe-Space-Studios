@@ -1,0 +1,1888 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pathways to Safety - GBV Prevention & Support</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Trauma-Informed Design Variables */
+        :root {
+            --primary: #6C63FF;
+            --primary-light: #8E85FF;
+            --primary-dark: #5B52EE;
+            --secondary: #FF6584;
+            --success: #4CAF50;
+            --warning: #FFC107;
+            --danger: #F44336;
+            --text: #333333;
+            --text-light: #666666;
+            --text-lighter: #999999;
+            --bg: #f8f9fa;
+            --card-bg: #ffffff;
+            --border: #e0e0e0;
+            --shadow: 0 4px 12px rgba(0,0,0,0.08);
+            --shadow-hover: 0 8px 24px rgba(0,0,0,0.12);
+            
+            /* GBV-specific colors */
+            --survivor: #6C63FF;
+            --harm-doer: #FF6584;
+            --prevention: #4CAF50;
+            --education: #FFC107;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        /* Top Controls Bar */
+        .top-controls {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: var(--card-bg);
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: var(--shadow);
+            z-index: 1002;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .accessibility-controls {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .accessibility-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+            font-size: 1.1rem;
+        }
+
+        .accessibility-btn:hover {
+            background: var(--primary-dark);
+            transform: scale(1.05);
+        }
+
+        .accessibility-panel {
+            position: absolute;
+            top: 50px;
+            left: 0;
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: var(--shadow);
+            z-index: 1000;
+            width: 300px;
+            display: none;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .accessibility-panel.active {
+            display: flex;
+        }
+
+        .accessibility-option {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .accessibility-option:last-child {
+            border-bottom: none;
+        }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 24px;
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .toggle-slider {
+            background-color: var(--primary);
+        }
+
+        input:checked + .toggle-slider:before {
+            transform: translateX(26px);
+        }
+
+        /* Emergency Exit */
+        .btn-emergency {
+            background: var(--danger);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+        }
+
+        .btn-emergency:hover {
+            background: #d32f2f;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        /* App Header */
+        .app-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px 20px;
+            background: var(--card-bg);
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 60px;
+            z-index: 100;
+        }
+
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            background: none;
+            border: none;
+            cursor: pointer;
+            width: 30px;
+            height: 24px;
+            justify-content: space-between;
+        }
+
+        .menu-toggle span {
+            display: block;
+            height: 3px;
+            width: 100%;
+            background-color: var(--text);
+            border-radius: 3px;
+            transition: all 0.3s ease;
+        }
+
+        .app-header h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .user-actions {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .btn-icon {
+            background: none;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: var(--text);
+            transition: all 0.3s ease;
+        }
+
+        .btn-icon:hover {
+            background-color: rgba(108, 99, 255, 0.1);
+            color: var(--primary);
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-weight: 600;
+            transition: transform 0.3s ease;
+        }
+
+        .user-avatar:hover {
+            transform: scale(1.05);
+        }
+
+        /* Main Navigation */
+        .main-nav {
+            position: fixed;
+            left: 0;
+            top: 60px;
+            height: calc(100vh - 60px);
+            width: 280px;
+            background: var(--card-bg);
+            box-shadow: var(--shadow);
+            padding: 20px 0;
+            display: flex;
+            flex-direction: column;
+            z-index: 99;
+            transition: transform 0.3s ease;
+        }
+
+        .main-nav ul {
+            list-style: none;
+            flex: 1;
+        }
+
+        .main-nav li {
+            margin-bottom: 5px;
+        }
+
+        .main-nav a {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            color: var(--text);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            gap: 12px;
+            border-radius: 8px;
+            margin: 0 10px;
+        }
+
+        .main-nav a:hover, 
+        .main-nav li.active a {
+            background-color: rgba(108, 99, 255, 0.1);
+            color: var(--primary);
+        }
+
+        .main-nav a i {
+            width: 20px;
+            text-align: center;
+        }
+
+        .nav-footer {
+            padding: 20px;
+            border-top: 1px solid var(--border);
+        }
+
+        .btn-secondary {
+            background: rgba(108, 99, 255, 0.1);
+            color: var(--primary);
+            border: none;
+            padding: 10px 15px;
+            border-radius: 8px;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(108, 99, 255, 0.2);
+        }
+
+        .connection-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 15px;
+            font-size: 0.85rem;
+            color: var(--text-light);
+        }
+
+        .status-indicator {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+
+        .status-indicator.online {
+            background-color: var(--success);
+        }
+
+        /* Main Content */
+        .gbv-container {
+            margin-left: 280px;
+            padding: 30px;
+            min-height: 100vh;
+            margin-top: 60px;
+        }
+
+        /* Welcome Section */
+        .gbv-intro {
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        .gbv-intro h2 {
+            font-size: 2rem;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .gbv-intro p {
+            font-size: 1.1rem;
+            color: var(--text-light);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        /* Pathway Selection */
+        .pathway-selection {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin: 40px 0;
+        }
+
+        .pathway-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 30px;
+            text-align: center;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .pathway-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 6px;
+        }
+
+        .pathway-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .pathway-card i {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            transition: transform 0.3s ease;
+        }
+
+        .pathway-card:hover i {
+            transform: scale(1.1);
+        }
+
+        .pathway-card h3 {
+            margin: 0 0 15px 0;
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .pathway-card p {
+            margin: 0 0 20px 0;
+            color: var(--text-light);
+            font-size: 1rem;
+        }
+
+        .btn-pathway {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-pathway:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        /* Theme variations for each pathway */
+        .pathway-card.survivor::before {
+            background: var(--survivor);
+        }
+
+        .pathway-card.survivor i {
+            color: var(--survivor);
+        }
+
+        .pathway-card.survivor .btn-pathway {
+            background: var(--survivor);
+        }
+
+        .pathway-card.survivor .btn-pathway:hover {
+            background: #5B52EE;
+        }
+
+        .pathway-card.harm-doer::before {
+            background: var(--harm-doer);
+        }
+
+        .pathway-card.harm-doer i {
+            color: var(--harm-doer);
+        }
+
+        .pathway-card.harm-doer .btn-pathway {
+            background: var(--harm-doer);
+        }
+
+        .pathway-card.harm-doer .btn-pathway:hover {
+            background: #e0557a;
+        }
+
+        .pathway-card.prevention::before {
+            background: var(--prevention);
+        }
+
+        .pathway-card.prevention i {
+            color: var(--prevention);
+        }
+
+        .pathway-card.prevention .btn-pathway {
+            background: var(--prevention);
+        }
+
+        .pathway-card.prevention .btn-pathway:hover {
+            background: #3d8b40;
+        }
+
+        /* Understanding GBV Section */
+        .gbv-education {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 30px;
+            margin: 40px 0;
+            box-shadow: var(--shadow);
+        }
+
+        .gbv-education h3 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .education-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .education-card {
+            background: var(--bg);
+            border-radius: 12px;
+            padding: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .education-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow);
+        }
+
+        .education-card h4 {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .education-card h4 i {
+            color: var(--primary);
+        }
+
+        .education-card p {
+            color: var(--text-light);
+            font-size: 0.95rem;
+        }
+
+        /* Immediate Help Section */
+        .immediate-help {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 30px;
+            margin: 40px 0;
+            box-shadow: var(--shadow);
+        }
+
+        .immediate-help h3 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .help-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .help-option {
+            background: var(--bg);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .help-option:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow);
+        }
+
+        .help-option i {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            color: var(--primary);
+        }
+
+        .help-option h4 {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+        }
+
+        .help-option p {
+            color: var(--text-light);
+            margin-bottom: 15px;
+            font-size: 0.95rem;
+        }
+
+        .btn-help {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-help:hover {
+            background: var(--primary-dark);
+        }
+
+        /* Safety Planning Section */
+        .safety-planning {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 30px;
+            margin: 40px 0;
+            box-shadow: var(--shadow);
+        }
+
+        .safety-planning h3 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .safety-steps {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .safety-step {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            padding: 15px;
+            border-radius: 12px;
+            background: var(--bg);
+            transition: all 0.3s ease;
+        }
+
+        .safety-step:hover {
+            background: rgba(108, 99, 255, 0.05);
+        }
+
+        .step-number {
+            background: var(--primary);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        .step-content h4 {
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+        }
+
+        .step-content p {
+            color: var(--text-light);
+            font-size: 0.95rem;
+        }
+
+        /* Resources Section */
+        .gbv-resources {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 30px;
+            margin: 40px 0;
+            box-shadow: var(--shadow);
+        }
+
+        .gbv-resources h3 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .resource-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .resource-item {
+            background: var(--bg);
+            border-radius: 12px;
+            padding: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .resource-item:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow);
+        }
+
+        .resource-item h4 {
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .resource-item h4 i {
+            color: var(--primary);
+        }
+
+        .resource-item p {
+            color: var(--text-light);
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+        }
+
+        .btn-resource {
+            background: rgba(108, 99, 255, 0.1);
+            color: var(--primary);
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-resource:hover {
+            background: rgba(108, 99, 255, 0.2);
+        }
+
+        /* Outcome Modal */
+        .outcome-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .outcome-modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .outcome-content {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 30px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow);
+            position: relative;
+        }
+
+        .outcome-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .outcome-header h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .close-outcome {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text);
+        }
+
+        .outcome-steps {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .outcome-step {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            padding: 15px;
+            border-radius: 12px;
+            background: var(--bg);
+        }
+
+        .step-icon {
+            background: var(--primary);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .step-content h4 {
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+        }
+
+        .step-content p {
+            color: var(--text-light);
+            font-size: 0.95rem;
+        }
+
+        .outcome-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .pathway-selection {
+                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            }
+        }
+
+        @media (max-width: 768px) {
+            .menu-toggle {
+                display: flex;
+            }
+            
+            .main-nav {
+                transform: translateX(-100%);
+            }
+            
+            .main-nav.active {
+                transform: translateX(0);
+            }
+            
+            .gbv-container {
+                margin-left: 0;
+                padding: 20px 15px;
+            }
+            
+            .pathway-selection {
+                grid-template-columns: 1fr;
+            }
+            
+            .top-controls {
+                padding: 10px 15px;
+            }
+            
+            .accessibility-panel {
+                width: calc(100vw - 30px);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .app-header h1 {
+                font-size: 1.3rem;
+            }
+            
+            .gbv-intro h2 {
+                font-size: 1.7rem;
+            }
+            
+            .outcome-actions {
+                flex-direction: column;
+            }
+            
+            .top-controls {
+                padding: 8px 10px;
+            }
+            
+            .accessibility-btn {
+                width: 36px;
+                height: 36px;
+                font-size: 1rem;
+            }
+            
+            .btn-emergency {
+                padding: 8px 12px;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Controls Bar -->
+    <div class="top-controls">
+        <div class="accessibility-controls">
+            <button class="accessibility-btn" id="accessibility-toggle" aria-label="Accessibility controls">
+                <i class="fas fa-universal-access"></i>
+            </button>
+            <button class="accessibility-btn" id="voice-toggle" aria-label="Voice activation">
+                <i class="fas fa-microphone"></i>
+            </button>
+            
+            <div class="accessibility-panel" id="accessibility-panel">
+                <h3>Accessibility Settings</h3>
+                
+                <div class="accessibility-option">
+                    <span>Voice Control</span>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="voice-control-toggle">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+                
+                <div class="accessibility-option">
+                    <span>High Contrast</span>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="high-contrast-toggle">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+                
+                <div class="accessibility-option">
+                    <span>Large Text</span>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="text-size-toggle">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+                
+                <div class="accessibility-option">
+                    <span>Reduce Animations</span>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="reduce-motion-toggle">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+                
+                <label for="language-selector">Language:</label>
+                <select id="language-selector" class="language-selector">
+                    <option value="en">English</option>
+                    <option value="zu">isiZulu</option>
+                    <option value="xh">isiXhosa</option>
+                    <option value="af">Afrikaans</option>
+                    <option value="nso">Sepedi</option>
+                    <option value="tn">Setswana</option>
+                    <option value="st">Sesotho</option>
+                    <option value="ts">Xitsonga</option>
+                    <option value="ss">siSwati</option>
+                    <option value="ve">Tshivenda</option>
+                    <option value="nr">isiNdebele</option>
+                </select>
+                
+                <button class="btn-secondary" id="reset-accessibility">
+                    <i class="fas fa-undo"></i> Reset Settings
+                </button>
+            </div>
+        </div>
+
+        <!-- Emergency Exit -->
+        <a href="https://www.google.com" class="btn-emergency">
+            <i class="fas fa-running"></i> Exit Quickly
+        </a>
+    </div>
+
+    <!-- App Header -->
+    <header class="app-header">
+        <button class="menu-toggle" id="menu-toggle" aria-label="Toggle navigation">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+        <h1>Pathways to Safety</h1>
+        <div class="user-actions">
+            <button class="btn-icon" id="notifications-btn" aria-label="Notifications">
+                <i class="fas fa-bell"></i>
+            </button>
+            <div class="user-avatar" id="user-menu-toggle" aria-label="User menu" tabindex="0" role="button">
+                <span id="user-initial">U</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Navigation -->
+    <nav class="main-nav" id="main-nav" aria-label="Main navigation">
+        <ul>
+            <li><a href="dashboard.html"><i class="fas fa-home"></i> Dashboard</a></li>
+            <li><a href="empower-vault.html"><i class="fas fa-lock"></i> EmpowerVault</a></li>
+            <li class="active"><a href="pathways-to-safety.html" aria-current="page"><i class="fas fa-road"></i> Pathways to Safety</a></li>
+            <li><a href="community-pulse.html"><i class="fas fa-heartbeat"></i> Community Pulse</a></li>
+            <li><a href="justice-ally.html"><i class="fas fa-balance-scale"></i> Justice Ally</a></li>
+            <li><a href="safety-center.html"><i class="fas fa-shield-alt"></i> Safety Center</a></li>
+            <li><a href="settings.html"><i class="fas fa-cog"></i> Settings</a></li>
+        </ul>
+        
+        <div class="nav-footer">
+            <button class="btn-secondary" id="safety-center-btn">
+                <i class="fas fa-shield-alt"></i> Safety Center
+            </button>
+            <div class="connection-status">
+                <span class="status-indicator online" aria-label="Secure connection"></span>
+                <span>Secure Connection</span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="gbv-container" id="main-content" tabindex="-1">
+        <!-- Welcome Section -->
+        <section class="gbv-intro">
+            <h2>Pathways to Safety</h2>
+            <p>A supportive space for anyone affected by gender-based violence - whether you're experiencing harm, causing harm, or want to prevent it.</p>
+        </section>
+
+        <!-- Pathway Selection -->
+        <section class="pathway-selection">
+            <!-- Survivor Pathway -->
+            <div class="pathway-card survivor">
+                <i class="fas fa-hands-helping" aria-hidden="true"></i>
+                <h3>I'm Experiencing Harm</h3>
+                <p>Find safety, support, and resources to help you heal and reclaim your power.</p>
+                <button class="btn-pathway" id="survivor-pathway">
+                    <i class="fas fa-arrow-right" aria-hidden="true"></i> Explore Support
+                </button>
+            </div>
+            
+            <!-- Harm-Doer Pathway -->
+            <div class="pathway-card harm-doer">
+                <i class="fas fa-handshake" aria-hidden="true"></i>
+                <h3>I'm Causing Harm</h3>
+                <p>Find resources to understand your behavior, learn accountability, and change patterns.</p>
+                <button class="btn-pathway" id="harm-doer-pathway">
+                    <i class="fas fa-arrow-right" aria-hidden="true"></i> Start Change Journey
+                </button>
+            </div>
+            
+            <!-- Prevention Pathway -->
+            <div class="pathway-card prevention">
+                <i class="fas fa-shield-alt" aria-hidden="true"></i>
+                <h3>I Want to Prevent GBV</h3>
+                <p>Learn how to recognize warning signs, intervene safely, and support others.</p>
+                <button class="btn-pathway" id="prevention-pathway">
+                    <i class="fas fa-arrow-right" aria-hidden="true"></i> Learn Prevention
+                </button>
+            </div>
+        </section>
+
+        <!-- Understanding GBV Section -->
+        <section class="gbv-education">
+            <h3>Understanding Gender-Based Violence</h3>
+            <p>GBV includes physical, sexual, emotional, economic, and psychological harm. Understanding these patterns is the first step toward change.</p>
+            
+            <div class="education-cards">
+                <div class="education-card">
+                    <h4><i class="fas fa-heart-broken" aria-hidden="true"></i> Recognizing Abuse</h4>
+                    <p>Learn to identify different forms of abuse and control tactics used in harmful relationships.</p>
+                    <button class="btn-resource" data-outcome="recognizing-abuse">
+                        <i class="fas fa-external-link-alt" aria-hidden="true"></i> Learn More
+                    </button>
+                </div>
+                <div class="education-card">
+                    <h4><i class="fas fa-balance-scale" aria-hidden="true"></i> Understanding Consent</h4>
+                    <p>Explore what meaningful consent looks like and how to practice it in all relationships.</p>
+                    <button class="btn-resource" data-outcome="understanding-consent">
+                        <i class="fas fa-external-link-alt" aria-hidden="true"></i> Learn More
+                    </button>
+                </div>
+                <div class="education-card">
+                    <h4><i class="fas fa-exclamation-triangle" aria-hidden="true"></i> Warning Signs</h4>
+                    <p>Identify red flags in relationships and behaviors that may indicate potential for harm.</p>
+                    <button class="btn-resource" data-outcome="warning-signs">
+                        <i class="fas fa-external-link-alt" aria-hidden="true"></i> Learn More
+                    </button>
+                </div>
+                <div class="education-card">
+                    <h4><i class="fas fa-history" aria-hidden="true"></i> Breaking Cycles</h4>
+                    <p>Understand how patterns of violence can be interrupted and replaced with healthy behaviors.</p>
+                    <button class="btn-resource" data-outcome="breaking-cycles">
+                        <i class="fas fa-external-link-alt" aria-hidden="true"></i> Learn More
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Immediate Help Section -->
+        <section class="immediate-help">
+            <h3>Immediate Help & Resources</h3>
+            <p>If you're in immediate danger, call emergency services. These resources are available 24/7.</p>
+            
+            <div class="help-options">
+                <div class="help-option">
+                    <i class="fas fa-phone-alt" aria-hidden="true"></i>
+                    <h4>Crisis Hotlines</h4>
+                    <p>Speak with trained advocates who can provide support and local resources.</p>
+                    <button class="btn-help" data-outcome="crisis-hotlines">
+                        <i class="fas fa-phone" aria-hidden="true"></i> Call Now
+                    </button>
+                </div>
+                <div class="help-option">
+                    <i class="fas fa-comments" aria-hidden="true"></i>
+                    <h4>Chat Support</h4>
+                    <p>Connect with support through secure, anonymous text-based conversations.</p>
+                    <button class="btn-help" data-outcome="chat-support">
+                        <i class="fas fa-comment" aria-hidden="true"></i> Start Chat
+                    </button>
+                </div>
+                <div class="help-option">
+                    <i class="fas fa-map-marker-alt" aria-hidden="true"></i>
+                    <h4>Local Services</h4>
+                    <p>Find shelters, counseling, legal aid, and other services in your area.</p>
+                    <button class="btn-help" data-outcome="local-services">
+                        <i class="fas fa-search" aria-hidden="true"></i> Find Help
+                    </button>
+                </div>
+                <div class="help-option">
+                    <i class="fas fa-user-shield" aria-hidden="true"></i>
+                    <h4>Safety Planning</h4>
+                    <p>Create a personalized safety plan for your specific situation.</p>
+                    <button class="btn-help" data-outcome="safety-planning">
+                        <i class="fas fa-clipboard-list" aria-hidden="true"></i> Create Plan
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Safety Planning Section -->
+        <section class="safety-planning">
+            <h3>Creating a Safety Plan</h3>
+            <p>Whether you're experiencing harm or working to change harmful behaviors, safety planning is essential.</p>
+            
+            <div class="safety-steps">
+                <div class="safety-step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h4>Identify Safe Spaces</h4>
+                        <p>Determine places where you can go if you feel unsafe, including friends' homes or public places.</p>
+                    </div>
+                </div>
+                <div class="safety-step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h4>Prepare Emergency Contacts</h4>
+                        <p>Keep important phone numbers handy, including trusted friends, family, and support services.</p>
+                    </div>
+                </div>
+                <div class="safety-step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h4>Plan for Escalation</h4>
+                        <p>Identify triggers and warning signs, and create strategies to de-escalate situations.</p>
+                    </div>
+                </div>
+                <div class="safety-step">
+                    <div class="step-number">4</div>
+                    <div class="step-content">
+                        <h4>Secure Important Documents</h4>
+                        <p>Keep copies of IDs, financial records, and other important documents in a safe place.</p>
+                    </div>
+                </div>
+                <div class="safety-step">
+                    <div class="step-number">5</div>
+                    <div class="step-content">
+                        <h4>Develop Self-Care Strategies</h4>
+                        <p>Identify activities and practices that help you manage stress and maintain emotional wellbeing.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Resources Section -->
+        <section class="gbv-resources">
+            <h3>Educational Resources</h3>
+            <p>Knowledge is power. These resources can help you understand GBV and find pathways to safety and change.</p>
+            
+            <div class="resource-list">
+                <div class="resource-item">
+                    <h4><i class="fas fa-book" aria-hidden="true"></i> Understanding Power & Control</h4>
+                    <p>Learn about the dynamics of power and control in abusive relationships.</p>
+                    <button class="btn-resource" data-outcome="power-control">
+                        <i class="fas fa-external-link-alt" aria-hidden="true"></i> Read More
+                    </button>
+                </div>
+                <div class="resource-item">
+                    <h4><i class="fas fa-heart" aria-hidden="true"></i> Healing from Trauma</h4>
+                    <p>Resources for survivors on the journey of healing and recovery.</p>
+                    <button class="btn-resource" data-outcome="healing-trauma">
+                        <i class="fas fa-external-link-alt" aria-hidden="true"></i> Read More
+                    </button>
+                </div>
+                <div class="resource-item">
+                    <h4><i class="fas fa-sync-alt" aria-hidden="true"></i> Changing Harmful Patterns</h4>
+                    <p>Guidance for those who want to stop using violent or controlling behaviors.</p>
+                    <button class="btn-resource" data-outcome="changing-patterns">
+                        <i class="fas fa-external-link-alt" aria-hidden="true"></i> Read More
+                    </button>
+                </div>
+                <div class="resource-item">
+                    <h4><i class="fas fa-users" aria-hidden="true"></i> Bystander Intervention</h4>
+                    <p>Learn how to safely intervene when you witness potentially harmful situations.</p>
+                    <button class="btn-resource" data-outcome="bystander-intervention">
+                        <i class="fas fa-external-link-alt" aria-hidden="true"></i> Read More
+                    </button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Outcome Modal -->
+    <div id="outcome-modal" class="outcome-modal" role="dialog" aria-modal="true" aria-labelledby="outcome-title">
+        <div class="outcome-content">
+            <div class="outcome-header">
+                <h3 id="outcome-title">Pathway Information</h3>
+                <button class="close-outcome" id="close-outcome" aria-label="Close outcome information">
+                    <i class="fas fa-times" aria-hidden="true"></i>
+                </button>
+            </div>
+            <div id="outcome-body">
+                <!-- Outcome content will be inserted here -->
+            </div>
+            <div class="outcome-actions">
+                <button class="btn-secondary" id="save-outcome">
+                    <i class="far fa-save" aria-hidden="true"></i> Save Information
+                </button>
+                <button class="btn-primary" id="close-outcome-btn">
+                    <i class="fas fa-times" aria-hidden="true"></i> Close
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Dashboard functionality with accessibility features
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load user data from localStorage
+            const currentUser = JSON.parse(localStorage.getItem('currentUser')) || { firstName: 'User' };
+            const userInitial = document.getElementById('user-initial');
+            userInitial.textContent = currentUser.firstName ? currentUser.firstName.charAt(0).toUpperCase() : 'U';
+
+            // Mobile menu toggle
+            const menuToggle = document.getElementById('menu-toggle');
+            const mainNav = document.getElementById('main-nav');
+            
+            menuToggle.addEventListener('click', function() {
+                mainNav.classList.toggle('active');
+            });
+            
+            // Close menu when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!mainNav.contains(e.target) && e.target !== menuToggle) {
+                    mainNav.classList.remove('active');
+                }
+            });
+
+            // Accessibility Controls
+            const accessibilityToggle = document.getElementById('accessibility-toggle');
+            const accessibilityPanel = document.getElementById('accessibility-panel');
+            const voiceToggle = document.getElementById('voice-toggle');
+            const voiceControlToggle = document.getElementById('voice-control-toggle');
+            const highContrastToggle = document.getElementById('high-contrast-toggle');
+            const textSizeToggle = document.getElementById('text-size-toggle');
+            const reduceMotionToggle = document.getElementById('reduce-motion-toggle');
+            const languageSelector = document.getElementById('language-selector');
+            const resetAccessibility = document.getElementById('reset-accessibility');
+            
+            // Toggle accessibility panel
+            accessibilityToggle.addEventListener('click', function() {
+                accessibilityPanel.classList.toggle('active');
+            });
+            
+            // High contrast mode
+            highContrastToggle.addEventListener('change', function() {
+                document.body.classList.toggle('high-contrast', this.checked);
+            });
+            
+            // Text size toggle
+            textSizeToggle.addEventListener('change', function() {
+                document.body.classList.toggle('large-text', this.checked);
+            });
+            
+            // Reduce motion toggle
+            reduceMotionToggle.addEventListener('change', function() {
+                document.body.classList.toggle('reduce-motion', this.checked);
+            });
+            
+            // Language selector
+            languageSelector.addEventListener('change', function() {
+                const selectedLang = this.value;
+                // In a real implementation, this would update the page content
+                console.log('Language changed to:', selectedLang);
+            });
+            
+            // Reset accessibility settings
+            resetAccessibility.addEventListener('click', function() {
+                document.body.classList.remove('high-contrast', 'large-text', 'reduce-motion');
+                highContrastToggle.checked = false;
+                textSizeToggle.checked = false;
+                reduceMotionToggle.checked = false;
+                languageSelector.value = 'en';
+            });
+
+            // Outcome Modal Functionality
+            const outcomeModal = document.getElementById('outcome-modal');
+            const outcomeTitle = document.getElementById('outcome-title');
+            const outcomeBody = document.getElementById('outcome-body');
+            const closeOutcome = document.getElementById('close-outcome');
+            const closeOutcomeBtn = document.getElementById('close-outcome-btn');
+            const saveOutcome = document.getElementById('save-outcome');
+            
+            // Define outcomes for each option
+            const outcomes = {
+                'survivor-pathway': {
+                    title: 'Support for Survivors',
+                    steps: [
+                        {
+                            icon: 'fas fa-shield-alt',
+                            title: 'Immediate Safety',
+                            description: 'Create a safety plan and identify emergency contacts and safe places.'
+                        },
+                        {
+                            icon: 'fas fa-heart',
+                            title: 'Emotional Support',
+                            description: 'Connect with counselors and support groups for trauma-informed care.'
+                        },
+                        {
+                            icon: 'fas fa-balance-scale',
+                            title: 'Legal Assistance',
+                            description: 'Access legal resources for protection orders and navigating the justice system.'
+                        },
+                        {
+                            icon: 'fas fa-home',
+                            title: 'Housing & Shelter',
+                            description: 'Find safe temporary housing and transitional support services.'
+                        },
+                        {
+                            icon: 'fas fa-users',
+                            title: 'Community Connection',
+                            description: 'Join survivor networks and community resources for ongoing support.'
+                        }
+                    ]
+                },
+                'harm-doer-pathway': {
+                    title: 'Accountability & Change Journey',
+                    steps: [
+                        {
+                            icon: 'fas fa-exclamation-triangle',
+                            title: 'Recognize Harmful Behaviors',
+                            description: 'Identify patterns of control, coercion, and violence in your relationships.'
+                        },
+                        {
+                            icon: 'fas fa-handshake',
+                            title: 'Take Responsibility',
+                            description: 'Acknowledge the impact of your actions without making excuses.'
+                        },
+                        {
+                            icon: 'fas fa-sync-alt',
+                            title: 'Learn New Skills',
+                            description: 'Develop healthy communication, emotional regulation, and conflict resolution skills.'
+                        },
+                        {
+                            icon: 'fas fa-user-shield',
+                            title: 'Accountability Programs',
+                            description: 'Join specialized programs for those who cause harm to change behavior patterns.'
+                        },
+                        {
+                            icon: 'fas fa-heart',
+                            title: 'Make Amends',
+                            description: 'Understand appropriate ways to repair harm when possible and safe.'
+                        }
+                    ]
+                },
+                'prevention-pathway': {
+                    title: 'GBV Prevention Education',
+                    steps: [
+                        {
+                            icon: 'fas fa-eye',
+                            title: 'Recognize Warning Signs',
+                            description: 'Learn to identify red flags and early indicators of potentially harmful relationships.'
+                        },
+                        {
+                            icon: 'fas fa-comments',
+                            title: 'Bystander Intervention',
+                            description: 'Develop skills to safely intervene when witnessing potentially harmful situations.'
+                        },
+                        {
+                            icon: 'fas fa-graduation-cap',
+                            title: 'Consent Education',
+                            description: 'Understand and promote enthusiastic, ongoing consent in all relationships.'
+                        },
+                        {
+                            icon: 'fas fa-hands-helping',
+                            title: 'Supportive Responses',
+                            description: 'Learn how to respond supportively when someone discloses experiencing harm.'
+                        },
+                        {
+                            icon: 'fas fa-users',
+                            title: 'Community Mobilization',
+                            description: 'Join efforts to create safer communities through policy and cultural change.'
+                        }
+                    ]
+                },
+                'recognizing-abuse': {
+                    title: 'Recognizing Different Forms of Abuse',
+                    steps: [
+                        {
+                            icon: 'fas fa-fist-raised',
+                            title: 'Physical Abuse',
+                            description: 'Hitting, slapping, pushing, restraining, or any physical force used to control or harm.'
+                        },
+                        {
+                            icon: 'fas fa-comment-slash',
+                            title: 'Emotional Abuse',
+                            description: 'Verbal attacks, humiliation, intimidation, isolation, and controlling behaviors.'
+                        },
+                        {
+                            icon: 'fas fa-dollar-sign',
+                            title: 'Economic Abuse',
+                            description: 'Controlling access to money, preventing employment, or exploiting financial resources.'
+                        },
+                        {
+                            icon: 'fas fa-user-lock',
+                            title: 'Digital Abuse',
+                            description: 'Monitoring communications, demanding passwords, or using technology to control or harass.'
+                        },
+                        {
+                            icon: 'fas fa-exclamation-circle',
+                            title: 'Get Help',
+                            description: 'If you recognize any of these patterns in your relationship, reach out for support.'
+                        }
+                    ]
+                },
+                'understanding-consent': {
+                    title: 'Understanding Consent',
+                    steps: [
+                        {
+                            icon: 'fas fa-check-circle',
+                            title: 'Freely Given',
+                            description: 'Consent must be given without pressure, manipulation, or coercion.'
+                        },
+                        {
+                            icon: 'fas fa-redo',
+                            title: 'Reversible',
+                            description: 'Anyone can change their mind about what they want to do, at any time.'
+                        },
+                        {
+                            icon: 'fas fa-brain',
+                            title: 'Informed',
+                            description: 'You can only consent to something if you have the full story.'
+                        },
+                        {
+                            icon: 'fas fa-heart',
+                            title: 'Enthusiastic',
+                            description: 'Look for an enthusiastic "yes!" rather than the absence of a "no".'
+                        },
+                        {
+                            icon: 'fas fa-clock',
+                            title: 'Specific',
+                            description: 'Agreeing to one thing doesn\'t mean you\'ve agreed to anything else.'
+                        }
+                    ]
+                },
+                'warning-signs': {
+                    title: 'Warning Signs of Abuse',
+                    steps: [
+                        {
+                            icon: 'fas fa-user-clock',
+                            title: 'Controlling Behavior',
+                            description: 'Monitoring your activities, isolating you from friends and family.'
+                        },
+                        {
+                            icon: 'fas fa-angry',
+                            title: 'Extreme Jealousy',
+                            description: 'Accusations of cheating, possessiveness, and controlling who you see.'
+                        },
+                        {
+                            icon: 'fas fa-comment-dots',
+                            title: 'Verbal Abuse',
+                            description: 'Name-calling, humiliation, yelling, and threats.'
+                        },
+                        {
+                            icon: 'fas fa-money-bill-wave',
+                            title: 'Financial Control',
+                            description: 'Preventing you from working, controlling all finances.'
+                        },
+                        {
+                            icon: 'fas fa-mobile-alt',
+                            title: 'Digital Monitoring',
+                            description: 'Checking your phone, demanding passwords, tracking your location.'
+                        }
+                    ]
+                },
+                'breaking-cycles': {
+                    title: 'Breaking Cycles of Violence',
+                    steps: [
+                        {
+                            icon: 'fas fa-history',
+                            title: 'Recognize Patterns',
+                            description: 'Identify the cycle of tension, incident, reconciliation, and calm.'
+                        },
+                        {
+                            icon: 'fas fa-hand-paper',
+                            title: 'Create Boundaries',
+                            description: 'Establish clear boundaries and communicate them effectively.'
+                        },
+                        {
+                            icon: 'fas fa-users',
+                            title: 'Build Support',
+                            description: 'Connect with supportive friends, family, and professionals.'
+                        },
+                        {
+                            icon: 'fas fa-book',
+                            title: 'Learn New Skills',
+                            description: 'Develop healthy communication and conflict resolution techniques.'
+                        },
+                        {
+                            icon: 'fas fa-heart',
+                            title: 'Practice Self-Care',
+                            description: 'Prioritize your wellbeing and emotional health throughout the process.'
+                        }
+                    ]
+                },
+                'crisis-hotlines': {
+                    title: '24/7 Crisis Hotlines',
+                    steps: [
+                        {
+                            icon: 'fas fa-phone',
+                            title: 'National Domestic Violence Hotline',
+                            description: '1-800-799-7233 | Available 24/7 in multiple languages'
+                        },
+                        {
+                            icon: 'fas fa-phone',
+                            title: 'National Sexual Assault Hotline',
+                            description: '1-800-656-4673 | Confidential support from trained staff'
+                        },
+                        {
+                            icon: 'fas fa-phone',
+                            title: 'Crisis Text Line',
+                            description: 'Text HOME to 741741 | Free, 24/7 crisis support via text'
+                        },
+                        {
+                            icon: 'fas fa-phone',
+                            title: 'The Trevor Project (LGBTQ+)',
+                            description: '1-866-488-7386 | Crisis intervention and suicide prevention'
+                        },
+                        {
+                            icon: 'fas fa-globe',
+                            title: 'Find Local Resources',
+                            description: 'Search for shelters, counseling, and legal aid in your community'
+                        }
+                    ]
+                },
+                'chat-support': {
+                    title: 'Online Chat Support',
+                    steps: [
+                        {
+                            icon: 'fas fa-comments',
+                            title: 'RAINN Online Hotline',
+                            description: '24/7 confidential support through online chat with trained specialists.'
+                        },
+                        {
+                            icon: 'fas fa-comment-medical',
+                            title: 'Crisis Text Line',
+                            description: 'Text with trained crisis counselors for any type of crisis.'
+                        },
+                        {
+                            icon: 'fas fa-shield-alt',
+                            title: 'Safe Exit Feature',
+                            description: 'All chats include quick exit buttons for immediate safety.'
+                        },
+                        {
+                            icon: 'fas fa-user-secret',
+                            title: 'Anonymous Support',
+                            description: 'No personal information required to start a conversation.'
+                        },
+                        {
+                            icon: 'fas fa-mobile-alt',
+                            title: 'Mobile App Available',
+                            description: 'Download the app for support wherever you are.'
+                        }
+                    ]
+                },
+                'local-services': {
+                    title: 'Finding Local Services',
+                    steps: [
+                        {
+                            icon: 'fas fa-map-marker-alt',
+                            title: 'Shelters & Safe Housing',
+                            description: 'Find emergency shelters and transitional housing in your area.'
+                        },
+                        {
+                            icon: 'fas fa-user-md',
+                            title: 'Counseling Services',
+                            description: 'Connect with trauma-informed therapists and support groups.'
+                        },
+                        {
+                            icon: 'fas fa-balance-scale',
+                            title: 'Legal Assistance',
+                            description: 'Access free or low-cost legal help for protection orders and more.'
+                        },
+                        {
+                            icon: 'fas fa-utensils',
+                            title: 'Basic Needs Support',
+                            description: 'Find food banks, clothing, and other essential resources.'
+                        },
+                        {
+                            icon: 'fas fa-hands-helping',
+                            title: 'Advocacy Programs',
+                            description: 'Connect with advocates who can help navigate systems and resources.'
+                        }
+                    ]
+                },
+                'safety-planning': {
+                    title: 'Creating a Safety Plan',
+                    steps: [
+                        {
+                            icon: 'fas fa-home',
+                            title: 'Safe Spaces',
+                            description: 'Identify safe rooms in your home and safe places outside your home.'
+                        },
+                        {
+                            icon: 'fas fa-phone',
+                            title: 'Emergency Contacts',
+                            description: 'Keep important numbers programmed and written down in multiple places.'
+                        },
+                        {
+                            icon: 'fas fa-suitcase',
+                            title: 'Go Bag',
+                            description: 'Prepare a bag with essentials in case you need to leave quickly.'
+                        },
+                        {
+                            icon: 'fas fa-file-alt',
+                            title: 'Important Documents',
+                            description: 'Keep copies of IDs, financial records, and other important papers safe.'
+                        },
+                        {
+                            icon: 'fas fa-code',
+                            title: 'Digital Safety',
+                            description: 'Change passwords, clear browser history, and secure your devices.'
+                        }
+                    ]
+                },
+                'power-control': {
+                    title: 'Understanding Power & Control',
+                    steps: [
+                        {
+                            icon: 'fas fa-chess-queen',
+                            title: 'Power Dynamics',
+                            description: 'Understand how power imbalances can enable abusive behaviors.'
+                        },
+                        {
+                            icon: 'fas fa-brain',
+                            title: 'Coercive Control',
+                            description: 'Learn about patterns of intimidation, isolation, and control.'
+                        },
+                        {
+                            icon: 'fas fa-balance-scale',
+                            title: 'Equality in Relationships',
+                            description: 'Explore what healthy, equal partnerships look like.'
+                        },
+                        {
+                            icon: 'fas fa-handshake',
+                            title: 'Shared Decision Making',
+                            description: 'Understand the importance of mutual respect and joint decisions.'
+                        },
+                        {
+                            icon: 'fas fa-heart',
+                            title: 'Healthy Boundaries',
+                            description: 'Learn to establish and maintain healthy personal boundaries.'
+                        }
+                    ]
+                },
+                'healing-trauma': {
+                    title: 'Healing from Trauma',
+                    steps: [
+                        {
+                            icon: 'fas fa-heartbeat',
+                            title: 'Understanding Trauma',
+                            description: 'Learn how trauma affects the brain, body, and emotions.'
+                        },
+                        {
+                            icon: 'fas fa-hands',
+                            title: 'Grounding Techniques',
+                            description: 'Practice methods to stay present during flashbacks or anxiety.'
+                        },
+                        {
+                            icon: 'fas fa-users',
+                            title: 'Support Networks',
+                            description: 'Build a network of trusted friends, family, and professionals.'
+                        },
+                        {
+                            icon: 'fas fa-book',
+                            title: 'Therapeutic Approaches',
+                            description: 'Explore different trauma therapy methods like EMDR and CBT.'
+                        },
+                        {
+                            icon: 'fas fa-seedling',
+                            title: 'Post-Traumatic Growth',
+                            description: 'Discover how healing can lead to new strengths and perspectives.'
+                        }
+                    ]
+                },
+                'changing-patterns': {
+                    title: 'Changing Harmful Patterns',
+                    steps: [
+                        {
+                            icon: 'fas fa-search',
+                            title: 'Self-Reflection',
+                            description: 'Honestly examine your behaviors and their impact on others.'
+                        },
+                        {
+                            icon: 'fas fa-comments',
+                            title: 'Accountability',
+                            description: 'Take responsibility for your actions without making excuses.'
+                        },
+                        {
+                            icon: 'fas fa-brain',
+                            title: 'Emotional Regulation',
+                            description: 'Learn to manage anger, jealousy, and other difficult emotions.'
+                        },
+                        {
+                            icon: 'fas fa-hands-helping',
+                            title: 'Professional Help',
+                            description: 'Connect with specialized programs for behavior change.'
+                        },
+                        {
+                            icon: 'fas fa-history',
+                            title: 'Breaking Cycles',
+                            description: 'Develop new patterns to replace harmful behaviors.'
+                        }
+                    ]
+                },
+                'bystander-intervention': {
+                    title: 'Bystander Intervention',
+                    steps: [
+                        {
+                            icon: 'fas fa-eye',
+                            title: 'Recognize the Situation',
+                            description: 'Identify potentially harmful situations that may need intervention.'
+                        },
+                        {
+                            icon: 'fas fa-exclamation-triangle',
+                            title: 'Interpret as Problem',
+                            description: 'Understand that the situation requires action and is not "none of your business".'
+                        },
+                        {
+                            icon: 'fas fa-user-shield',
+                            title: 'Assume Responsibility',
+                            description: 'Decide that you have a role to play in helping or getting help.'
+                        },
+                        {
+                            icon: 'fas fa-tools',
+                            title: 'Know How to Help',
+                            description: 'Learn different intervention strategies from direct to indirect.'
+                        },
+                        {
+                            icon: 'fas fa-hand-rock',
+                            title: 'Take Action Safely',
+                            description: 'Intervene in ways that keep everyone, including yourself, safe.'
+                        }
+                    ]
+                }
+            };
+
+            // Function to show outcome modal
+            function showOutcome(outcomeKey) {
+                const outcome = outcomes[outcomeKey];
+                if (!outcome) return;
+                
+                outcomeTitle.textContent = outcome.title;
+                outcomeBody.innerHTML = '';
+                
+                // Create outcome steps
+                const stepsContainer = document.createElement('div');
+                stepsContainer.className = 'outcome-steps';
+                
+                outcome.steps.forEach((step, index) => {
+                    const stepElement = document.createElement('div');
+                    stepElement.className = 'outcome-step';
+                    stepElement.innerHTML = `
+                        <div class="step-icon">
+                            <i class="${step.icon}" aria-hidden="true"></i>
+                        </div>
+                        <div class="step-content">
+                            <h4>${step.title}</h4>
+                            <p>${step.description}</p>
+                        </div>
+                    `;
+                    stepsContainer.appendChild(stepElement);
+                });
+                
+                outcomeBody.appendChild(stepsContainer);
+                outcomeModal.classList.add('active');
+            }
+
+            // Close outcome modal
+            function closeOutcomeModal() {
+                outcomeModal.classList.remove('active');
+            }
+
+            // Event listeners for outcome buttons
+            document.getElementById('survivor-pathway').addEventListener('click', () => showOutcome('survivor-pathway'));
+            document.getElementById('harm-doer-pathway').addEventListener('click', () => showOutcome('harm-doer-pathway'));
+            document.getElementById('prevention-pathway').addEventListener('click', () => showOutcome('prevention-pathway'));
+            
+            // Add event listeners to all buttons with data-outcome attribute
+            document.querySelectorAll('[data-outcome]').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const outcomeKey = e.target.getAttribute('data-outcome');
+                    showOutcome(outcomeKey);
+                });
+            });
+
+            // Close modal events
+            closeOutcome.addEventListener('click', closeOutcomeModal);
+            closeOutcomeBtn.addEventListener('click', closeOutcomeModal);
+            
+            // Close modal when clicking outside
+            outcomeModal.addEventListener('click', (e) => {
+                if (e.target === outcomeModal) {
+                    closeOutcomeModal();
+                }
+            });
+            
+            // Save outcome information
+            saveOutcome.addEventListener('click', function() {
+                alert('Information saved to your SafeSpace account for future reference.');
+            });
+            
+            // Safety center button
+            document.getElementById('safety-center-btn').addEventListener('click', function() {
+                window.location.href = 'safety-center.html';
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings - SafeSpace Studio</title>
+    <link rel="stylesheet" href="trauma-informed.css">
+    <link rel="stylesheet" href="trauma-informed.css">
+</head>
+<main class="auth-container">
+        <div class="logo-container">
+            <!-- Updated Logo with SVG for crisp display -->
+            <svg class="logo" width="80" height="80" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="50" cy="50" r="45" fill="#6C63FF" fill-opacity="0.1" stroke="#6C63FF" stroke-width="2"/>
+                <path d="M50 30L60 45H40L50 60L60 75L70 60H80L70 45H80L70 30H50Z" fill="#6C63FF"/>
+                <circle cx="50" cy="50" r="15" fill="white"/>
+                <path d="M50 40L55 50L50 60L45 50L50 40Z" fill="#6C63FF"/>
+            </svg>
+<body class="trauma-informed">
+    <div class="emergency-exit">
+        <a href="https://www.google.com" class="btn-emergency">Emergency Exit</a>
+    </div>
+    
+    <header class="app-header">
+        <button class="menu-toggle" id="menu-toggle">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+        <h1>Settings</h1>
+        <div class="user-actions">
+            <button class="btn-icon" id="settings-help">
+                <img src="images/help.svg" alt="Help">
+            </button>
+        </div>
+    </header>
+    
+    <nav class="main-nav">
+        <!-- Same navigation as dashboard -->
+    </nav>
+    
+    <main class="settings-container">
+        <section class="settings-section">
+            <h2>Account & Security</h2>
+            
+            <div class="settings-card">
+                <h3>Authentication</h3>
+                <div class="setting-item">
+                    <div class="setting-details">
+                        <h4>Biometric Login</h4>
+                        <p>Use fingerprint or face recognition to log in</p>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                
+                <div class="setting-item">
+                    <div class="setting-details">
+                        <h4>Change Passphrase</h4>
+                        <p>Update your secure login phrase</p>
+                    </div>
+                    <button class="btn-small">Change</button>
+                </div>
+                
+                <div class="setting-item">
+                    <div class="setting-details">
+                        <h4>Two-Factor Authentication</h4>
+                        <p>Add an extra layer of security</p>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </div>
+            
+            <div class="settings-card">
+                <h3>Emergency Settings</h3>
+                <div class="setting-item">
+                    <div class="setting-details">
+                        <h4>Emergency Contacts</h4>
+                        <p>Who to notify in case of emergency</p>
+                    </div>
+                    <button class="btn-small">Manage</button>
+                </div>
+                
+                <div class="setting-item">
+                    <div class="setting-details">
+                        <h4>Emergency Exit Behavior</h4>
+                        <p>What happens when you use emergency exit</p>
+                    </div>
+                    <button class="btn-small">Configure</button>
+                </div>
+                
+                <div class="setting-item">
+                    <div class="setting-details">
+                        <h4>Data Self-Destruct</h4>
+                        <p>Automatically erase data if account is inactive</p>
+                    </div>
+                    <button class="btn-small">Set Up</button>
+                </div>
+            </div>
+        </section>
+        
+        <section class="settings-section">
+            <h2>Privacy & Data</h2>
+            
+            <div class="settings-card">
+                <h3>Data Storage</h3>
+                <div class="setting-item">
+                    <div class="setting-details">
+                        <h4>Encryption Level</h4>
+                        <p>Military-grade (recommended)</p>
+                    </div>
+                </div>
+                
+                <div class="setting-item">
+                    <div class="setting-details">
+                        <h4>Local Backup</h4>
+                        <p>Store encrypted copies on your device</p>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                
+                <div class="setting-item">
+                    <div class="setting-details">
+                        <h4>Cloud Sync</h4>
+                        <p>Access your data across devices</p>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </div>
+            
+            <div class="settings-card">
+                <h3>Tracking & Analytics</h3>
+                <div class="setting-item">
+                    <div class="setting-details">
+                        <h4>Usage Analytics</h4>
+                        <p>Help improve SafeSpace (anonymous)</p>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                
+                <div class="setting-item">
+                    <div class="setting-details">
+                        <h4>Emotional Tracking</h4>
+                        <p>Allow AI to analyze mood for better support</p>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                
+                <div class="setting-item">
+                    <div class="setting-details">
+                        <h4>Clear All Data</h4>
+                        <p>Permanently delete your account and data</p>
+                    </div>
+                    <button class="btn-small danger">Delete</button>
+                </div>
+            </div>
+        </section>
+        
+        <section class="settings-section">
+            <h2>Accessibility</h2>
+            
+            <div class="settings-card">
+                <h3>Display & Text</h3>
+                <div class="setting-item">
+                    <div class="setting-details">
+                        <h4>Text Size</h4>
+                        <p>Make text easier to read</p>
+                    </div>
+                    <select class="setting-select">
+                        <option>Default</option>
+                        <option>Large</option>
+                        <option>Extra Large</option>
+                    </select>
+                </div>
+                
+                <div class="setting-item">
+                    <div class="setting-details">
+                        <h4>Color Contrast</h4>
+                        <p>High contrast mode</p>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                
+                <div class="setting-item">
+                    <div class="setting-details">
+                        <h4>Dark Mode</h4>
+                        <p>Easier on the eyes</p>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </div>
+            
+            <div class="settings-card">
+                <h3>Navigation & Interaction</h3>
+                <div class="setting-item">
+                    <div class="setting-details">
+                        <h4>Voice Navigation</h4>
+                        <p>Control with voice commands</p>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                
+                <div class="setting-item">
+                    <div class="setting-details">
+                        <h4>Simplified Interface</h4>
+                        <p>Reduce visual complexity</p>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                
+                <div class="setting-item">
+                    <div class="setting-details">
+                        <h4>Haptic Feedback</h4>
+                        <p>Touch vibrations for actions</p>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </div>
+        </section>
+        
+        <section class="settings-section">
+            <h2>Notifications</h2>
+            
+            <div class="settings-card">
+                <h3>Notification Preferences</h3>
+                <div class="setting-item">
+                    <div class="setting-details">
+                        <h4>Community Activity</h4>
+                        <p>Responses to your posts and messages</p>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                
+                <div class="setting-item">
+                    <div class="setting-details">
+                        <h4>Wellness Check-Ins</h4>
+                        <p>Periodic emotional well-being prompts</p>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                
+                <div class="setting-item">
+                    <div class="setting-details">
+                        <h4>Goal Reminders</h4>
+                        <p>Updates on your ReclaimPath progress</p>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                
+                <div class="setting-item">
+                    <div class="setting-details">
+                        <h4>Legal Deadlines</h4>
+                        <p>Upcoming court dates and filings</p>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </div>
+            
+            <div class="settings-card">
+                <h3>Notification Methods</h3>
+                <div class="setting-item">
+                    <div class="setting-details">
+                        <h4>In-App Notifications</h4>
+                        <p>Show notifications within SafeSpace</p>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                
+                <div class="setting-item">
+                    <div class="setting-details">
+                        <h4>Email Notifications</h4>
+                        <p>Send notifications to your email</p>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                
+                <div class="setting-item">
+                    <div class="setting-details">
+                        <h4>SMS Alerts</h4>
+                        <p>Critical alerts via text message</p>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </div>
+        </section>
+        
+        <section class="settings-section danger-zone">
+            <h2>Advanced</h2>
+            
+            <div class="settings-card">
+                <h3>Data Management</h3>
+                <div class="setting-item">
+                    <div class="setting-details">
+                        <h4>Export All Data</h4>
+                        <p>Download a copy of your SafeSpace data</p>
+                    </div>
+                    <button class="btn-small">Export</button>
+                </div>
+                
+                <div class="setting-item">
+                    <div class="setting-details">
+                        <h4>Selective Deletion</h4>
+                        <p>Choose specific data to remove</p>
+                    </div>
+                    <button class="btn-small">Choose Data</button>
+                </div>
+                
+                <div class="setting-item">
+                    <div class="setting-details">
+                        <h4>Delete Account</h4>
+                        <p>Permanently remove your account and all data</p>
+                    </div>
+                    <button class="btn-small danger">Delete Account</button>
+                </div>
+            </div>
+            
+            <div class="settings-card">
+                <h3>Advanced Features</h3>
+                <div class="setting-item">
+                    <div class="setting-details">
+                        <h4>Offline Mode</h4>
+                        <p>Work without internet connection</p>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                
+                <div class="setting-item">
+                    <div class="setting-details">
+                        <h4>Developer Mode</h4>
+                        <p>Advanced tools for technical users</p>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </div>
+        </section>
+    </main>
+    
+    <!-- Delete Account Modal -->
+    <div id="delete-modal" class="modal">
+        <div class="modal-content">
+            <h2>Delete Your Account</h2>
+            
+            <div class="delete-warning">
+                <img src="images/warning.svg" alt="Warning">
+                <p>This action cannot be undone. All your data will be permanently erased.</p>
+            </div>
+            
+            <div class="delete-options">
+                <div class="option">
+                    <input type="radio" name="delete-option" id="delete-standard" checked>
+                    <label for="delete-standard">
+                        <h4>Standard Deletion</h4>
+                        <p>All data removed from our servers immediately</p>
+                    </label>
+                </div>
+                
+                <div class="option">
+                    <input type="radio" name="delete-option" id="delete-secure">
+                    <label for="delete-secure">
+                        <h4>Secure Deletion</h4>
+                        <p>Data overwritten before deletion (takes 24 hours)</p>
+                    </label>
+                </div>
+            </div>
+            
+            <div class="delete-confirm">
+                <input type="checkbox" id="confirm-delete">
+                <label for="confirm-delete">I understand this action is permanent and irreversible</label>
+            </div>
+            
+            <div class="modal-actions">
+                <button class="btn-secondary" id="cancel-delete">Cancel</button>
+                <button class="btn-danger" id="confirm-delete-btn" disabled>Permanently Delete</button>
+            </div>
+        </div>
+    </div>
+    
+    <script src="js/settings.js"></script>
+</body>
+</html>

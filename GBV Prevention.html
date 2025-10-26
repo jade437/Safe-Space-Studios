@@ -1,0 +1,1250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GBV Prevention & Support - SafeSpace Studio</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Trauma-Informed Design Variables */
+        :root {
+            --primary: #6C63FF;
+            --primary-light: #8E85FF;
+            --primary-dark: #5B52EE;
+            --secondary: #FF6584;
+            --success: #4CAF50;
+            --warning: #FFC107;
+            --danger: #F44336;
+            --text: #333333;
+            --text-light: #666666;
+            --text-lighter: #999999;
+            --bg: #f8f9fa;
+            --card-bg: #ffffff;
+            --border: #e0e0e0;
+            --shadow: 0 4px 12px rgba(0,0,0,0.08);
+            --shadow-hover: 0 8px 24px rgba(0,0,0,0.12);
+            
+            /* Support-specific colors */
+            --resources: #9C27B0;
+            --safety-plan: #FF9800;
+            --education: #2196F3;
+            --assessment: #4CAF50;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            transition: all 0.3s ease;
+        }
+
+        /* Focus styles for accessibility */
+        *:focus {
+            outline: 2px solid var(--primary);
+            outline-offset: 2px;
+        }
+
+        /* Emergency Exit */
+        .emergency-exit {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1001;
+        }
+
+        .btn-emergency {
+            background: var(--danger);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+        }
+
+        .btn-emergency:hover, 
+        .btn-emergency:focus {
+            background: #d32f2f;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        /* App Header */
+        .app-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px 20px;
+            background: var(--card-bg);
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .app-header h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .user-actions {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .btn-icon {
+            background: none;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: var(--text);
+            transition: all 0.3s ease;
+        }
+
+        .btn-icon:hover, 
+        .btn-icon:focus {
+            background-color: rgba(108, 99, 255, 0.1);
+            color: var(--primary);
+        }
+
+        /* Main Content */
+        .support-container {
+            padding: 30px;
+            min-height: 100vh;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Welcome Section */
+        .support-intro {
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        .support-intro h2 {
+            font-size: 2rem;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .support-intro p {
+            font-size: 1.1rem;
+            color: var(--text-light);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        /* Support Features Grid */
+        .support-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+            margin: 40px 0;
+        }
+
+        .feature-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 30px;
+            text-align: center;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 6px;
+        }
+
+        .feature-card:hover, 
+        .feature-card:focus {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .feature-card i {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            transition: transform 0.3s ease;
+        }
+
+        .feature-card:hover i, 
+        .feature-card:focus i {
+            transform: scale(1.1);
+        }
+
+        .feature-card h3 {
+            margin: 0 0 15px 0;
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .feature-card p {
+            margin: 0 0 20px 0;
+            color: var(--text-light);
+            font-size: 1rem;
+        }
+
+        .btn-feature {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-feature:hover, 
+        .btn-feature:focus {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        /* Theme variations for each feature */
+        .feature-card.resources::before {
+            background: var(--resources);
+        }
+
+        .feature-card.resources i {
+            color: var(--resources);
+        }
+
+        .feature-card.resources .btn-feature {
+            background: var(--resources);
+        }
+
+        .feature-card.resources .btn-feature:hover, 
+        .feature-card.resources .btn-feature:focus {
+            background: #7B1FA2;
+        }
+
+        .feature-card.safety-plan::before {
+            background: var(--safety-plan);
+        }
+
+        .feature-card.safety-plan i {
+            color: var(--safety-plan);
+        }
+
+        .feature-card.safety-plan .btn-feature {
+            background: var(--safety-plan);
+        }
+
+        .feature-card.safety-plan .btn-feature:hover, 
+        .feature-card.safety-plan .btn-feature:focus {
+            background: #F57C00;
+        }
+
+        .feature-card.education::before {
+            background: var(--education);
+        }
+
+        .feature-card.education i {
+            color: var(--education);
+        }
+
+        .feature-card.education .btn-feature {
+            background: var(--education);
+        }
+
+        .feature-card.education .btn-feature:hover, 
+        .feature-card.education .btn-feature:focus {
+            background: #1976D2;
+        }
+
+        .feature-card.assessment::before {
+            background: var(--assessment);
+        }
+
+        .feature-card.assessment i {
+            color: var(--assessment);
+        }
+
+        .feature-card.assessment .btn-feature {
+            background: var(--assessment);
+        }
+
+        .feature-card.assessment .btn-feature:hover, 
+        .feature-card.assessment .btn-feature:focus {
+            background: #388E3C;
+        }
+
+        /* Resource Directory */
+        .resource-directory {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 30px;
+            margin: 40px 0;
+            box-shadow: var(--shadow);
+        }
+
+        .directory-header {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            margin-bottom: 25px;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .search-box {
+            flex: 1;
+            min-width: 250px;
+            position: relative;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 12px 45px 12px 15px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 1rem;
+            background: var(--bg);
+        }
+
+        .search-box i {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-light);
+        }
+
+        .filter-options {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .filter-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .resources-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .resource-card {
+            background: var(--bg);
+            border-radius: 12px;
+            padding: 20px;
+            transition: all 0.3s ease;
+            border-left: 4px solid var(--primary);
+        }
+
+        .resource-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow);
+        }
+
+        .resource-card h4 {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            color: var(--primary);
+        }
+
+        .resource-card p {
+            color: var(--text-light);
+            margin-bottom: 15px;
+            font-size: 0.9rem;
+        }
+
+        .resource-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 15px;
+        }
+
+        .resource-type {
+            background: rgba(108, 99, 255, 0.1);
+            color: var(--primary);
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .resource-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-call {
+            background: var(--success);
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+
+        /* Safety Planning */
+        .safety-planning {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 30px;
+            margin: 40px 0;
+            box-shadow: var(--shadow);
+        }
+
+        .plan-steps {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin: 25px 0;
+        }
+
+        .plan-step {
+            background: var(--bg);
+            border-radius: 12px;
+            padding: 20px;
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+        }
+
+        .step-number {
+            background: var(--safety-plan);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        .step-content {
+            flex: 1;
+        }
+
+        .step-content h4 {
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+
+        .step-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .btn-save {
+            background: var(--success);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        /* Educational Content */
+        .educational-content {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 30px;
+            margin: 40px 0;
+            box-shadow: var(--shadow);
+        }
+
+        .content-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .tab-btn.active {
+            background: var(--education);
+            color: white;
+            border-color: var(--education);
+        }
+
+        .content-area {
+            background: var(--bg);
+            border-radius: 12px;
+            padding: 25px;
+            min-height: 300px;
+        }
+
+        /* Risk Assessment */
+        .risk-assessment {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 30px;
+            margin: 40px 0;
+            box-shadow: var(--shadow);
+        }
+
+        .assessment-question {
+            margin-bottom: 25px;
+        }
+
+        .question-text {
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .answer-options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .answer-option {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px;
+            background: var(--bg);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .answer-option:hover {
+            background: rgba(108, 99, 255, 0.1);
+        }
+
+        .answer-option.selected {
+            background: rgba(76, 175, 80, 0.1);
+            border: 1px solid var(--success);
+        }
+
+        .assessment-progress {
+            margin: 25px 0;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: var(--border);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--assessment);
+            transition: width 0.3s ease;
+        }
+
+        /* Fake Screen */
+        .fake-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            z-index: 10000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            color: white;
+            text-align: center;
+        }
+
+        .fake-screen.active {
+            display: flex;
+        }
+
+        .fake-content {
+            max-width: 500px;
+            padding: 20px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .support-container {
+                padding: 20px 15px;
+            }
+            
+            .support-features {
+                grid-template-columns: 1fr;
+            }
+            
+            .directory-header {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .resources-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .app-header h1 {
+                font-size: 1.3rem;
+            }
+            
+            .support-intro h2 {
+                font-size: 1.7rem;
+            }
+        }
+    </style>
+</head>
+<body class="trauma-informed">
+    <!-- Emergency Exit -->
+    <div class="emergency-exit">
+        <a href="https://www.google.com" class="btn-emergency">
+            <i class="fas fa-running"></i> Exit Quickly
+        </a>
+    </div>
+
+    <!-- Fake Screen Button -->
+    <div class="emergency-exit" style="top: 80px;">
+        <button class="btn-emergency" id="fake-screen-btn" style="background: var(--resources);">
+            <i class="fas fa-eye-slash"></i> Fake Screen
+        </button>
+    </div>
+
+    <!-- App Header -->
+    <header class="app-header">
+        <h1>GBV Prevention & Support</h1>
+        <div class="user-actions">
+            <button class="btn-icon" id="notifications-btn" aria-label="Notifications">
+                <i class="fas fa-bell"></i>
+            </button>
+            <div class="user-avatar" id="user-menu-toggle" aria-label="User menu" tabindex="0" role="button">
+                <i class="fas fa-user"></i>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="support-container">
+        <!-- Welcome Section -->
+        <section class="support-intro">
+            <h2>GBV Prevention & Support Resources</h2>
+            <p>Comprehensive support, education, and safety planning tools designed with your safety and privacy in mind.</p>
+        </section>
+
+        <!-- Support Features Grid -->
+        <section class="support-features">
+            <!-- Resource Directory -->
+            <div class="feature-card resources">
+                <i class="fas fa-hands-helping" aria-hidden="true"></i>
+                <h3>Resource Directory</h3>
+                <p>Find local support services, shelters, and emergency contacts</p>
+                <button class="btn-feature" id="resources-button">
+                    <i class="fas fa-search" aria-hidden="true"></i> Find Help
+                </button>
+            </div>
+            
+            <!-- Safety Planning -->
+            <div class="feature-card safety-plan">
+                <i class="fas fa-shield-alt" aria-hidden="true"></i>
+                <h3>Safety Planning</h3>
+                <p>Create a personalized safety plan with guided steps</p>
+                <button class="btn-feature" id="safety-plan-button">
+                    <i class="fas fa-clipboard-list" aria-hidden="true"></i> Start Planning
+                </button>
+            </div>
+            
+            <!-- Educational Content -->
+            <div class="feature-card education">
+                <i class="fas fa-graduation-cap" aria-hidden="true"></i>
+                <h3>Educational Content</h3>
+                <p>Learn about GBV, healthy relationships, and legal rights</p>
+                <button class="btn-feature" id="education-button">
+                    <i class="fas fa-book" aria-hidden="true"></i> Learn More
+                </button>
+            </div>
+
+            <!-- Risk Assessment -->
+            <div class="feature-card assessment">
+                <i class="fas fa-clipboard-check" aria-hidden="true"></i>
+                <h3>Risk Assessment</h3>
+                <p>Confidential assessment to understand your situation</p>
+                <button class="btn-feature" id="assessment-button">
+                    <i class="fas fa-chart-bar" aria-hidden="true"></i> Start Assessment
+                </button>
+            </div>
+        </section>
+
+        <!-- Resource Directory Section -->
+        <section id="resource-directory" class="resource-directory" style="display: none;">
+            <div class="directory-header">
+                <div class="search-box">
+                    <input type="text" id="resource-search" placeholder="Search for services, locations, or types of help...">
+                    <i class="fas fa-search"></i>
+                </div>
+                <div class="filter-options">
+                    <button class="filter-btn active" data-filter="all">All</button>
+                    <button class="filter-btn" data-filter="shelter">Shelters</button>
+                    <button class="filter-btn" data-filter="counseling">Counseling</button>
+                    <button class="filter-btn" data-filter="legal">Legal Aid</button>
+                    <button class="filter-btn" data-filter="medical">Medical</button>
+                </div>
+            </div>
+
+            <div class="resources-grid" id="resources-grid">
+                <!-- Resources will be populated by JavaScript -->
+            </div>
+        </section>
+
+        <!-- Safety Planning Section -->
+        <section id="safety-planning" class="safety-planning" style="display: none;">
+            <h3>Create Your Safety Plan</h3>
+            <p>A safety plan helps you prepare for difficult situations. Complete each step at your own pace.</p>
+            
+            <div class="plan-steps">
+                <div class="plan-step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h4>Identify Safe People & Places</h4>
+                        <p>List people you can trust and safe locations you can go to in an emergency</p>
+                        <div class="step-actions">
+                            <textarea placeholder="List trusted contacts and safe locations..." rows="3" style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 6px; margin-bottom: 10px;"></textarea>
+                            <button class="btn-save">Save</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="plan-step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h4>Emergency Bag Preparation</h4>
+                        <p>Prepare an emergency bag with essential items you might need if you have to leave quickly</p>
+                        <div class="step-actions">
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px;">
+                                <label><input type="checkbox"> Important documents</label>
+                                <label><input type="checkbox"> Medications</label>
+                                <label><input type="checkbox"> Phone charger</label>
+                                <label><input type="checkbox"> Cash</label>
+                                <label><input type="checkbox"> Change of clothes</label>
+                                <label><input type="checkbox"> Personal items</label>
+                            </div>
+                            <button class="btn-save">Save Checklist</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="plan-step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h4>Develop Code Words</h4>
+                        <p>Create code words with trusted people to communicate safely in dangerous situations</p>
+                        <div class="step-actions">
+                            <input type="text" placeholder="Emergency code word" style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 6px; margin-bottom: 10px;">
+                            <input type="text" placeholder="Safe check-in code" style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 6px; margin-bottom: 10px;">
+                            <button class="btn-save">Save Codes</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Educational Content Section -->
+        <section id="educational-content" class="educational-content" style="display: none;">
+            <h3>Educational Resources</h3>
+            
+            <div class="content-tabs">
+                <button class="tab-btn active" data-tab="gbv-forms">Forms of GBV</button>
+                <button class="tab-btn" data-tab="healthy-relationships">Healthy Relationships</button>
+                <button class="tab-btn" data-tab="legal-rights">Legal Rights</button>
+                <button class="tab-btn" data-tab="safety-tips">Safety Tips</button>
+            </div>
+            
+            <div class="content-area" id="content-area">
+                <h4>Understanding Different Forms of Gender-Based Violence</h4>
+                <p>GBV includes various forms of harm and control. Recognizing these patterns is the first step toward safety.</p>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px;">
+                    <div>
+                        <h5 style="color: var(--danger);">Physical Abuse</h5>
+                        <p>Hitting, slapping, pushing, choking, or any physical force used to control or harm.</p>
+                    </div>
+                    <div>
+                        <h5 style="color: var(--warning);">Emotional Abuse</h5>
+                        <p>Verbal attacks, humiliation, intimidation, isolation, and controlling behaviors.</p>
+                    </div>
+                    <div>
+                        <h5 style="color: var(--primary);">Financial Abuse</h5>
+                        <p>Controlling access to money, preventing employment, or exploiting financial resources.</p>
+                    </div>
+                    <div>
+                        <h5 style="color: var(--education);">Digital Abuse</h5>
+                        <p>Monitoring communications, demanding passwords, or using technology to control or harass.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Risk Assessment Section -->
+        <section id="risk-assessment" class="risk-assessment" style="display: none;">
+            <h3>Confidential Risk Assessment</h3>
+            <p>This assessment helps you understand the level of risk in your situation. All answers are completely private.</p>
+            
+            <div class="assessment-progress">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
+                </div>
+                <div style="text-align: center; margin-top: 5px; font-size: 0.9rem; color: var(--text-light);">
+                    Question <span id="current-question">1</span> of <span id="total-questions">5</span>
+                </div>
+            </div>
+            
+            <div id="assessment-questions">
+                <!-- Questions will be populated by JavaScript -->
+            </div>
+            
+            <div class="emergency-actions" id="assessment-actions" style="display: none;">
+                <button class="btn-cancel" id="restart-assessment">
+                    <i class="fas fa-redo"></i> Restart Assessment
+                </button>
+                <button class="btn-confirm" id="view-results">
+                    <i class="fas fa-chart-bar"></i> View Results
+                </button>
+            </div>
+        </section>
+    </main>
+
+    <!-- Fake Screen -->
+    <div id="fake-screen" class="fake-screen">
+        <div class="fake-content">
+            <h1 style="font-size: 3rem; margin-bottom: 20px;">📱</h1>
+            <h2>No Signal</h2>
+            <p style="margin: 20px 0;">Your device is currently searching for network connection.</p>
+            <p style="font-size: 0.9rem; opacity: 0.8;">Tap anywhere to continue waiting...</p>
+        </div>
+    </div>
+
+    <script>
+        // GBV Prevention & Support Features Implementation
+        document.addEventListener('DOMContentLoaded', function() {
+            // State management
+            let currentSection = null;
+            let assessmentAnswers = [];
+            let currentQuestion = 0;
+
+            // Sample resources data
+            const resources = [
+                {
+                    id: 1,
+                    name: "GBV Command Centre",
+                    type: "hotline",
+                    phone: "0800 428 428",
+                    description: "24/7 national emergency line for gender-based violence",
+                    location: "Nationwide",
+                    free: true
+                },
+                {
+                    id: 2,
+                    name: "People Opposing Women Abuse (POWA)",
+                    type: "shelter",
+                    phone: "011 642 4345",
+                    description: "Shelter, counseling and legal support for women",
+                    location: "Johannesburg",
+                    free: true
+                },
+                {
+                    id: 3,
+                    name: "TEARS Foundation",
+                    type: "hotline",
+                    phone: "*134*7355#",
+                    description: "Free USSD service for GBV support and referrals",
+                    location: "Nationwide",
+                    free: true
+                },
+                {
+                    id: 4,
+                    name: "Legal Aid South Africa",
+                    type: "legal",
+                    phone: "0800 110 110",
+                    description: "Free legal advice and representation",
+                    location: "Nationwide",
+                    free: true
+                },
+                {
+                    id: 5,
+                    name: "Lifeline SA",
+                    type: "counseling",
+                    phone: "0861 322 322",
+                    description: "Crisis counseling and suicide prevention",
+                    location: "Nationwide",
+                    free: true
+                },
+                {
+                    id: 6,
+                    name: "Rape Crisis Cape Town",
+                    type: "counseling",
+                    phone: "021 447 9762",
+                    description: "Specialized counseling for survivors of sexual violence",
+                    location: "Cape Town",
+                    free: true
+                }
+            ];
+
+            // Assessment questions
+            const assessmentQuestions = [
+                {
+                    question: "Has your partner ever physically hurt you?",
+                    options: [
+                        "Never",
+                        "Once or twice",
+                        "Several times",
+                        "Frequently"
+                    ]
+                },
+                {
+                    question: "Do you feel afraid of your partner?",
+                    options: [
+                        "Never",
+                        "Sometimes",
+                        "Often",
+                        "Constantly"
+                    ]
+                },
+                {
+                    question: "Has your partner threatened to harm you or your loved ones?",
+                    options: [
+                        "Never",
+                        "Once or twice", 
+                        "Several times",
+                        "Frequently"
+                    ]
+                },
+                {
+                    question: "Does your partner control your access to money, phone, or transportation?",
+                    options: [
+                        "Never",
+                        "Sometimes",
+                        "Often", 
+                        "Completely"
+                    ]
+                },
+                {
+                    question: "Have you considered leaving because you feel unsafe?",
+                    options: [
+                        "No, I feel safe",
+                        "I've thought about it",
+                        "I'm planning to leave",
+                        "I've tried to leave but couldn't"
+                    ]
+                }
+            ];
+
+            // Initialize features
+            initializeSupportFeatures();
+
+            function initializeSupportFeatures() {
+                console.log('Initializing GBV prevention and support features...');
+                
+                // Set up event listeners
+                setupEventListeners();
+                
+                // Load resources
+                loadResources();
+                
+                // Load assessment questions
+                loadAssessmentQuestions();
+            }
+
+            function setupEventListeners() {
+                // Feature buttons
+                document.getElementById('resources-button').addEventListener('click', () => showSection('resource-directory'));
+                document.getElementById('safety-plan-button').addEventListener('click', () => showSection('safety-planning'));
+                document.getElementById('education-button').addEventListener('click', () => showSection('educational-content'));
+                document.getElementById('assessment-button').addEventListener('click', () => showSection('risk-assessment'));
+
+                // Fake screen
+                document.getElementById('fake-screen-btn').addEventListener('click', activateFakeScreen);
+                document.getElementById('fake-screen').addEventListener('click', deactivateFakeScreen);
+
+                // Resource directory
+                document.getElementById('resource-search').addEventListener('input', filterResources);
+                document.querySelectorAll('.filter-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                        e.target.classList.add('active');
+                        filterResources();
+                    });
+                });
+
+                // Educational tabs
+                document.querySelectorAll('.tab-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                        e.target.classList.add('active');
+                        // In real app, load different content based on tab
+                    });
+                });
+
+                // Assessment navigation
+                document.getElementById('restart-assessment').addEventListener('click', restartAssessment);
+                document.getElementById('view-results').addEventListener('click', showAssessmentResults);
+            }
+
+            function showSection(sectionId) {
+                // Hide all sections
+                document.querySelectorAll('.resource-directory, .safety-planning, .educational-content, .risk-assessment')
+                    .forEach(section => section.style.display = 'none');
+                
+                // Show selected section
+                document.getElementById(sectionId).style.display = 'block';
+                currentSection = sectionId;
+            }
+
+            function loadResources() {
+                const grid = document.getElementById('resources-grid');
+                grid.innerHTML = '';
+
+                resources.forEach(resource => {
+                    const card = document.createElement('div');
+                    card.className = 'resource-card';
+                    card.dataset.type = resource.type;
+                    
+                    card.innerHTML = `
+                        <h4>${resource.name}</h4>
+                        <p>${resource.description}</p>
+                        <p><strong>Location:</strong> ${resource.location}</p>
+                        <div class="resource-meta">
+                            <span class="resource-type">${resource.type}</span>
+                            <div class="resource-actions">
+                                ${resource.phone ? `<button class="btn-call" onclick="callNumber('${resource.phone}')">
+                                    <i class="fas fa-phone"></i> Call
+                                </button>` : ''}
+                                ${resource.free ? `<span style="color: var(--success); font-size: 0.8rem;">Free</span>` : ''}
+                            </div>
+                        </div>
+                    `;
+                    
+                    grid.appendChild(card);
+                });
+            }
+
+            function filterResources() {
+                const searchTerm = document.getElementById('resource-search').value.toLowerCase();
+                const activeFilter = document.querySelector('.filter-btn.active').dataset.filter;
+                
+                document.querySelectorAll('.resource-card').forEach(card => {
+                    const text = card.textContent.toLowerCase();
+                    const type = card.dataset.type;
+                    
+                    const matchesSearch = text.includes(searchTerm);
+                    const matchesFilter = activeFilter === 'all' || type === activeFilter;
+                    
+                    card.style.display = matchesSearch && matchesFilter ? 'block' : 'none';
+                });
+            }
+
+            function loadAssessmentQuestions() {
+                const container = document.getElementById('assessment-questions');
+                document.getElementById('total-questions').textContent = assessmentQuestions.length;
+                showQuestion(0);
+            }
+
+            function showQuestion(index) {
+                const container = document.getElementById('assessment-questions');
+                const question = assessmentQuestions[index];
+                
+                container.innerHTML = `
+                    <div class="assessment-question">
+                        <div class="question-text">${question.question}</div>
+                        <div class="answer-options">
+                            ${question.options.map((option, i) => `
+                                <div class="answer-option" data-value="${i}">
+                                    <input type="radio" name="assessment-answer" id="option-${i}" value="${i}">
+                                    <label for="option-${i}">${option}</label>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                    <div class="emergency-actions">
+                        ${index > 0 ? `<button class="btn-cancel" id="prev-question">Previous</button>` : ''}
+                        <button class="btn-confirm" id="next-question">
+                            ${index === assessmentQuestions.length - 1 ? 'Finish Assessment' : 'Next Question'}
+                        </button>
+                    </div>
+                `;
+
+                // Update progress
+                const progress = ((index + 1) / assessmentQuestions.length) * 100;
+                document.getElementById('progress-fill').style.width = `${progress}%`;
+                document.getElementById('current-question').textContent = index + 1;
+
+                // Add event listeners
+                document.querySelectorAll('.answer-option').forEach(option => {
+                    option.addEventListener('click', function() {
+                        document.querySelectorAll('.answer-option').forEach(opt => opt.classList.remove('selected'));
+                        this.classList.add('selected');
+                        this.querySelector('input').checked = true;
+                    });
+                });
+
+                document.getElementById('next-question').addEventListener('click', () => {
+                    const selected = document.querySelector('input[name="assessment-answer"]:checked');
+                    if (selected) {
+                        assessmentAnswers[index] = parseInt(selected.value);
+                        
+                        if (index === assessmentQuestions.length - 1) {
+                            finishAssessment();
+                        } else {
+                            showQuestion(index + 1);
+                        }
+                    } else {
+                        alert('Please select an answer before continuing.');
+                    }
+                });
+
+                if (index > 0) {
+                    document.getElementById('prev-question').addEventListener('click', () => {
+                        showQuestion(index - 1);
+                    });
+                }
+            }
+
+            function finishAssessment() {
+                document.getElementById('assessment-questions').style.display = 'none';
+                document.getElementById('assessment-actions').style.display = 'flex';
+                
+                // Calculate risk level (simplified)
+                const totalScore = assessmentAnswers.reduce((sum, answer) => sum + answer, 0);
+                let riskLevel = 'Low';
+                let recommendations = [];
+                
+                if (totalScore >= 12) {
+                    riskLevel = 'High';
+                    recommendations = [
+                        'Consider reaching out to a shelter or trusted contact immediately',
+                        'Use the emergency SOS feature if you feel unsafe',
+                        'Contact the GBV Command Centre at 0800 428 428'
+                    ];
+                } else if (totalScore >= 8) {
+                    riskLevel = 'Medium';
+                    recommendations = [
+                        'Create a safety plan using our tools',
+                        'Identify safe people and places in your life',
+                        'Save important emergency numbers in your phone'
+                    ];
+                } else {
+                    riskLevel = 'Low';
+                    recommendations = [
+                        'Continue educating yourself about healthy relationships',
+                        'Save our resource directory for future reference',
+                        'Check in with trusted friends or family regularly'
+                    ];
+                }
+                
+                document.getElementById('assessment-questions').innerHTML = `
+                    <div style="text-align: center; padding: 20px;">
+                        <h4 style="color: ${riskLevel === 'High' ? 'var(--danger)' : riskLevel === 'Medium' ? 'var(--warning)' : 'var(--success)'}; margin-bottom: 20px;">
+                            Risk Level: ${riskLevel}
+                        </h4>
+                        <div style="background: var(--bg); padding: 20px; border-radius: 12px; text-align: left;">
+                            <h5>Recommended Actions:</h5>
+                            <ul style="margin-top: 10px; padding-left: 20px;">
+                                ${recommendations.map(rec => `<li style="margin-bottom: 8px;">${rec}</li>`).join('')}
+                            </ul>
+                        </div>
+                        <p style="margin-top: 20px; font-size: 0.9rem; color: var(--text-light);">
+                            Remember: You are not alone. Help is available 24/7.
+                        </p>
+                    </div>
+                `;
+                document.getElementById('assessment-questions').style.display = 'block';
+            }
+
+            function restartAssessment() {
+                assessmentAnswers = [];
+                currentQuestion = 0;
+                document.getElementById('assessment-actions').style.display = 'none';
+                loadAssessmentQuestions();
+            }
+
+            function showAssessmentResults() {
+                // Already shown in finishAssessment
+                alert('Your assessment results are displayed above. For immediate help, use our emergency features.');
+            }
+
+            function activateFakeScreen() {
+                document.getElementById('fake-screen').classList.add('active');
+            }
+
+            function deactivateFakeScreen() {
+                document.getElementById('fake-screen').classList.remove('active');
+            }
+
+            // Global function for calling numbers
+            window.callNumber = function(phone) {
+                if (phone.startsWith('*')) {
+                    // USSD code
+                    alert(`To use this service, dial ${phone} from your phone`);
+                } else {
+                    // Regular phone number
+                    alert(`Calling ${phone}...\n\nIn a real app, this would connect the call directly.`);
+                    // In real app: window.location.href = `tel:${phone}`;
+                }
+            };
+
+            // Initialize the app
+            console.log('GBV Prevention & Support Features Ready');
+        });
+    </script>
+</body>
+</html>

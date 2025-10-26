@@ -1,0 +1,2354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SafeSpace Studio - Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Enhanced Dashboard Styles with Accessibility Features */
+        :root {
+            --primary: #6C63FF;
+            --primary-light: #8E85FF;
+            --primary-dark: #5B52EE;
+            --secondary: #FF6584;
+            --success: #4CAF50;
+            --warning: #FFC107;
+            --danger: #F44336;
+            --text: #333333;
+            --text-light: #666666;
+            --text-lighter: #999999;
+            --bg: #f8f9fa;
+            --card-bg: #ffffff;
+            --border: #e0e0e0;
+            --shadow: 0 4px 12px rgba(0,0,0,0.08);
+            --shadow-hover: 0 8px 24px rgba(0,0,0,0.12);
+            
+            /* High contrast variables */
+            --hc-bg: #000000;
+            --hc-text: #FFFFFF;
+            --hc-primary: #FFFF00;
+            --hc-border: #FFFFFF;
+            
+            /* Security & Compliance Colors */
+            --secure: #4CAF50;
+            --encrypted: #2196F3;
+            --pending: #FF9800;
+            --compliant: #4CAF50;
+            --non-compliant: #F44336;
+        }
+
+        /* High Contrast Mode */
+        body.high-contrast {
+            --bg: var(--hc-bg);
+            --text: var(--hc-text);
+            --primary: var(--hc-primary);
+            --border: var(--hc-border);
+            --card-bg: var(--hc-bg);
+            --text-light: var(--hc-text);
+            --text-lighter: var(--hc-text);
+            --shadow: 0 0 0 2px var(--hc-border);
+            --shadow-hover: 0 0 0 3px var(--hc-primary);
+        }
+
+        /* Large Text Mode */
+        body.large-text {
+            font-size: 1.2rem;
+        }
+
+        body.large-text .app-header h1 {
+            font-size: 1.8rem;
+        }
+
+        body.large-text .welcome-section h2 {
+            font-size: 2.4rem;
+        }
+
+        body.large-text .quick-access-card h3 {
+            font-size: 1.5rem;
+        }
+
+        body.large-text .btn-small, 
+        body.large-text .btn-secondary,
+        body.large-text .btn-emergency {
+            font-size: 1.1rem;
+            padding: 12px 18px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            transition: all 0.3s ease;
+        }
+
+        /* Focus styles for keyboard navigation */
+        *:focus {
+            outline: 2px solid var(--primary);
+            outline-offset: 2px;
+        }
+
+        body.high-contrast *:focus {
+            outline: 3px solid var(--hc-primary);
+        }
+
+        /* Top Controls Bar */
+        .top-controls {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: var(--card-bg);
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: var(--shadow);
+            z-index: 1002;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .accessibility-controls {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .accessibility-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+            font-size: 1.1rem;
+        }
+
+        .accessibility-btn:hover, 
+        .accessibility-btn:focus {
+            background: var(--primary-dark);
+            transform: scale(1.05);
+        }
+
+        .accessibility-panel {
+            position: absolute;
+            top: 50px;
+            left: 0;
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: var(--shadow);
+            z-index: 1000;
+            width: 300px;
+            display: none;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .accessibility-panel.active {
+            display: flex;
+        }
+
+        .accessibility-option {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .accessibility-option:last-child {
+            border-bottom: none;
+        }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 24px;
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .toggle-slider {
+            background-color: var(--primary);
+        }
+
+        input:checked + .toggle-slider:before {
+            transform: translateX(26px);
+        }
+
+        .language-selector {
+            width: 100%;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background: var(--bg);
+            font-size: 1rem;
+        }
+
+        .voice-status {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            border-radius: 8px;
+            background: var(--bg);
+        }
+
+        .voice-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--text-lighter);
+        }
+
+        .voice-indicator.listening {
+            background: var(--success);
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.2); opacity: 0.7; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .screen-reader-only {
+            position: absolute;
+            left: -10000px;
+            top: auto;
+            width: 1px;
+            height: 1px;
+            overflow: hidden;
+        }
+
+        /* Skip to main content link */
+        .skip-link {
+            position: absolute;
+            top: -40px;
+            left: 6px;
+            background: var(--primary);
+            color: white;
+            padding: 8px;
+            border-radius: 4px;
+            text-decoration: none;
+            z-index: 10000;
+            transition: top 0.3s ease;
+        }
+
+        .skip-link:focus {
+            top: 6px;
+        }
+
+        /* Emergency Exit */
+        .btn-emergency {
+            background: var(--danger);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+        }
+
+        .btn-emergency:hover, 
+        .btn-emergency:focus {
+            background: #d32f2f;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        /* App Header */
+        .app-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px 20px;
+            background: var(--card-bg);
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 60px;
+            z-index: 100;
+        }
+
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            background: none;
+            border: none;
+            cursor: pointer;
+            width: 30px;
+            height: 24px;
+            justify-content: space-between;
+        }
+
+        .menu-toggle span {
+            display: block;
+            height: 3px;
+            width: 100%;
+            background-color: var(--text);
+            border-radius: 3px;
+            transition: all 0.3s ease;
+        }
+
+        .app-header h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .user-actions {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .btn-icon {
+            background: none;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: var(--text);
+            transition: all 0.3s ease;
+        }
+
+        .btn-icon:hover, 
+        .btn-icon:focus {
+            background-color: rgba(108, 99, 255, 0.1);
+            color: var(--primary);
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-weight: 600;
+            transition: transform 0.3s ease;
+        }
+
+        .user-avatar:hover, 
+        .user-avatar:focus {
+            transform: scale(1.05);
+        }
+
+        /* Main Navigation */
+        .main-nav {
+            position: fixed;
+            left: 0;
+            top: 60px;
+            height: calc(100vh - 60px);
+            width: 280px;
+            background: var(--card-bg);
+            box-shadow: var(--shadow);
+            padding: 20px 0;
+            display: flex;
+            flex-direction: column;
+            z-index: 99;
+            transition: transform 0.3s ease;
+        }
+
+        .main-nav ul {
+            list-style: none;
+            flex: 1;
+        }
+
+        .main-nav li {
+            margin-bottom: 5px;
+        }
+
+        .main-nav a {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            color: var(--text);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            gap: 12px;
+            border-radius: 8px;
+            margin: 0 10px;
+        }
+
+        .main-nav a:hover, 
+        .main-nav a:focus, 
+        .main-nav li.active a {
+            background-color: rgba(108, 99, 255, 0.1);
+            color: var(--primary);
+        }
+
+        .main-nav a i {
+            width: 20px;
+            text-align: center;
+        }
+
+        .nav-footer {
+            padding: 20px;
+            border-top: 1px solid var(--border);
+        }
+
+        .btn-secondary {
+            background: rgba(108, 99, 255, 0.1);
+            color: var(--primary);
+            border: none;
+            padding: 10px 15px;
+            border-radius: 8px;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary:hover, 
+        .btn-secondary:focus {
+            background: rgba(108, 99, 255, 0.2);
+        }
+
+        .connection-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 15px;
+            font-size: 0.85rem;
+            color: var(--text-light);
+        }
+
+        .status-indicator {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+
+        .status-indicator.online {
+            background-color: var(--success);
+        }
+
+        /* Dashboard Content */
+        .dashboard-container {
+            margin-left: 280px;
+            padding: 30px;
+            min-height: 100vh;
+            margin-top: 60px;
+        }
+
+        .welcome-section {
+            margin-bottom: 40px;
+        }
+
+        .welcome-section h2 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        /* Quick Access Cards */
+        .quick-access-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin: 30px 0;
+        }
+
+        .quick-access-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 25px;
+            text-align: center;
+            text-decoration: none;
+            color: var(--text);
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .quick-access-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+        }
+
+        .quick-access-card:hover, 
+        .quick-access-card:focus {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .quick-access-card i {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            transition: transform 0.3s ease;
+        }
+
+        .quick-access-card:hover i, 
+        .quick-access-card:focus i {
+            transform: scale(1.1);
+        }
+
+        .quick-access-card h3 {
+            margin: 0 0 8px 0;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .quick-access-card p {
+            margin: 0;
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        /* Theme variations for each card */
+        .quick-access-card.vault::before {
+            background: var(--primary);
+        }
+
+        .quick-access-card.path::before {
+            background: var(--success);
+        }
+
+        .quick-access-card.cast::before {
+            background: var(--secondary);
+        }
+
+        .quick-access-card.community::before {
+            background: var(--warning);
+        }
+
+        .quick-access-card.justice::before {
+            background: #9C27B0;
+        }
+
+        .quick-access-card.collab::before {
+            background: #2196F3;
+        }
+
+        .quick-access-card.journal::before {
+            background: #FF9800;
+        }
+
+        /* Recent Activity Section */
+        .recent-activity {
+            margin-top: 40px;
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: var(--shadow);
+        }
+
+        .recent-activity h3 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .activity-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .activity-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .activity-item:hover, 
+        .activity-item:focus {
+            background-color: rgba(108, 99, 255, 0.05);
+        }
+
+        .activity-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            background: rgba(108, 99, 255, 0.1);
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-size: 1.2rem;
+        }
+
+        .activity-details h4 {
+            margin: 0 0 5px 0;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .activity-time {
+            color: var(--text-light);
+            font-size: 0.85rem;
+            margin-bottom: 5px;
+        }
+
+        .activity-preview {
+            color: var(--text-lighter);
+            font-size: 0.9rem;
+        }
+
+        .view-all-link {
+            display: block;
+            text-align: right;
+            margin-top: 15px;
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .view-all-link:hover, 
+        .view-all-link:focus {
+            text-decoration: underline;
+        }
+
+        /* Chatbot Styles */
+        .chatbot-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 380px;
+            max-height: 600px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            display: flex;
+            flex-direction: column;
+            z-index: 1000;
+            overflow: hidden;
+            transform: translateY(100%);
+            opacity: 0;
+            transition: transform 0.4s ease, opacity 0.4s ease;
+        }
+        
+        .chatbot-container.active {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        
+        .chatbot-header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+            padding: 18px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .chatbot-header h3 {
+            margin: 0;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+        
+        .chatbot-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            background: #f9f9f9;
+            max-height: 400px;
+        }
+        
+        .chatbot-message {
+            margin-bottom: 15px;
+            display: flex;
+        }
+        
+        .bot-message {
+            justify-content: flex-start;
+        }
+        
+        .user-message {
+            justify-content: flex-end;
+        }
+        
+        .message-content {
+            max-width: 80%;
+            padding: 12px 18px;
+            border-radius: 18px;
+            position: relative;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        
+        .bot-message .message-content {
+            background: white;
+            border: 1px solid #eee;
+        }
+        
+        .user-message .message-content {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .quick-reply-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+        
+        .btn-small {
+            background: rgba(108, 99, 255, 0.1);
+            color: var(--primary);
+            border: none;
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .btn-small:hover, 
+        .btn-small:focus {
+            background: rgba(108, 99, 255, 0.2);
+        }
+        
+        .chatbot-input {
+            display: flex;
+            padding: 15px;
+            border-top: 1px solid #eee;
+            background: white;
+        }
+        
+        .chatbot-input textarea {
+            flex: 1;
+            border: none;
+            resize: none;
+            padding: 12px;
+            border-radius: 12px;
+            background: #f5f5f5;
+            font-family: inherit;
+            font-size: 0.95rem;
+        }
+        
+        .chatbot-input textarea:focus {
+            outline: none;
+            background: #f0f0f0;
+        }
+        
+        .chatbot-safety-controls {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 15px;
+            background: #f9f9f9;
+            border-top: 1px solid #eee;
+        }
+        
+        .chatbot-toggle {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 65px;
+            height: 65px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+            border: none;
+            box-shadow: 0 6px 15px rgba(108, 99, 255, 0.3);
+            cursor: pointer;
+            z-index: 999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.6rem;
+            transition: all 0.3s ease;
+        }
+        
+        .chatbot-toggle:hover, 
+        .chatbot-toggle:focus {
+            transform: scale(1.05);
+            box-shadow: 0 8px 20px rgba(108, 99, 255, 0.4);
+        }
+        
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: var(--danger);
+            color: white;
+            border-radius: 50%;
+            width: 22px;
+            height: 22px;
+            font-size: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+        
+        /* Emotional state indicators */
+        .emotional-state {
+            font-size: 0.8rem;
+            margin-top: 8px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .emotional-state i {
+            margin-right: 5px;
+        }
+        
+        .state-calm { color: var(--success); }
+        .state-anxious { color: var(--warning); }
+        .state-distressed { color: var(--danger); }
+
+        /* NEW: Security & Compliance Dashboard */
+        .security-dashboard {
+            margin-top: 40px;
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: var(--shadow);
+        }
+
+        .security-dashboard h3 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .security-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .security-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: var(--shadow);
+            border-left: 4px solid var(--primary);
+        }
+
+        .security-card h4 {
+            margin: 0 0 15px 0;
+            font-size: 1.1rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .security-status {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .status-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .status-secure { background-color: var(--secure); }
+        .status-encrypted { background-color: var(--encrypted); }
+        .status-pending { background-color: var(--pending); }
+        .status-compliant { background-color: var(--compliant); }
+        .status-non-compliant { background-color: var(--non-compliant); }
+
+        .security-details {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            margin-bottom: 15px;
+        }
+
+        .security-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-security {
+            background: rgba(108, 99, 255, 0.1);
+            color: var(--primary);
+            border: none;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .btn-security:hover, 
+        .btn-security:focus {
+            background: rgba(108, 99, 255, 0.2);
+        }
+
+        /* NEW: Data Storage & Privacy Controls */
+        .privacy-controls {
+            margin-top: 40px;
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: var(--shadow);
+        }
+
+        .privacy-controls h3 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .privacy-options {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .privacy-option {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px;
+            border-radius: 8px;
+            background: rgba(108, 99, 255, 0.05);
+        }
+
+        .privacy-info {
+            flex: 1;
+        }
+
+        .privacy-info h4 {
+            margin: 0 0 5px 0;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .privacy-info p {
+            margin: 0;
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+
+        /* NEW: Transparency Panel */
+        .transparency-panel {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90%;
+            max-width: 700px;
+            max-height: 80vh;
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+            z-index: 1001;
+            display: none;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+
+        .transparency-panel.active {
+            display: flex;
+        }
+
+        .transparency-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .transparency-header h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .close-transparency {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text);
+        }
+
+        .transparency-content {
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .transparency-section {
+            margin-bottom: 25px;
+        }
+
+        .transparency-section h4 {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .transparency-section p {
+            margin-bottom: 10px;
+            line-height: 1.6;
+        }
+
+        .transparency-list {
+            list-style-type: disc;
+            margin-left: 20px;
+        }
+
+        .transparency-list li {
+            margin-bottom: 8px;
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            display: none;
+        }
+
+        .overlay.active {
+            display: block;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease forwards;
+        }
+
+        /* Reduced motion support */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .quick-access-grid {
+                grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            }
+            
+            .security-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .menu-toggle {
+                display: flex;
+            }
+            
+            .main-nav {
+                transform: translateX(-100%);
+            }
+            
+            .main-nav.active {
+                transform: translateX(0);
+            }
+            
+            .dashboard-container {
+                margin-left: 0;
+                padding: 20px 15px;
+            }
+            
+            .quick-access-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .chatbot-container {
+                width: calc(100vw - 30px);
+                right: 15px;
+                bottom: 15px;
+            }
+            
+            .top-controls {
+                padding: 10px 15px;
+            }
+            
+            .accessibility-panel {
+                width: calc(100vw - 30px);
+            }
+            
+            .transparency-panel {
+                width: 95%;
+                padding: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .app-header h1 {
+                font-size: 1.3rem;
+            }
+            
+            .welcome-section h2 {
+                font-size: 1.7rem;
+            }
+            
+            .chatbot-container {
+                width: calc(100vw - 20px);
+                right: 10px;
+                bottom: 10px;
+            }
+            
+            .chatbot-toggle {
+                width: 55px;
+                height: 55px;
+                font-size: 1.4rem;
+            }
+            
+            .top-controls {
+                padding: 8px 10px;
+            }
+            
+            .accessibility-btn {
+                width: 36px;
+                height: 36px;
+                font-size: 1rem;
+            }
+            
+            .btn-emergency {
+                padding: 8px 12px;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body class="trauma-informed">
+    <!-- Skip to main content link for screen readers -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+    
+    <!-- Screen Reader Announcements -->
+    <div id="screen-reader-announce" class="screen-reader-only" aria-live="polite" aria-atomic="true"></div>
+    
+    <!-- Overlay for modals -->
+    <div class="overlay" id="overlay"></div>
+    
+    <!-- Transparency Panel -->
+    <div class="transparency-panel" id="transparency-panel">
+        <div class="transparency-header">
+            <h3>Privacy & Data Transparency</h3>
+            <button class="close-transparency" id="close-transparency" aria-label="Close transparency panel">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="transparency-content">
+            <div class="transparency-section">
+                <h4>How We Protect Your Data</h4>
+                <p>Your safety and privacy are our top priorities. We implement multiple layers of security to ensure your information remains confidential and secure.</p>
+                <ul class="transparency-list">
+                    <li><strong>End-to-End Encryption:</strong> All your data is encrypted both in transit and at rest using industry-standard AES-256 encryption.</li>
+                    <li><strong>Zero-Knowledge Architecture:</strong> We cannot access your encrypted data - only you hold the keys to decrypt your information.</li>
+                    <li><strong>Secure Data Centers:</strong> Your data is stored in SOC 2 Type II certified data centers with 24/7 physical security.</li>
+                    <li><strong>Regular Security Audits:</strong> We undergo independent third-party security audits annually to maintain our security standards.</li>
+                </ul>
+            </div>
+            
+            <div class="transparency-section">
+                <h4>Data We Collect</h4>
+                <p>We collect only the minimum information necessary to provide our services effectively:</p>
+                <ul class="transparency-list">
+                    <li><strong>Account Information:</strong> Your name, email address, and preferences to personalize your experience.</li>
+                    <li><strong>Usage Data:</strong> How you interact with our platform to improve our services (anonymized where possible).</li>
+                    <li><strong>Content You Create:</strong> Journal entries, documents, and other content you choose to store in your EmpowerVault.</li>
+                    <li><strong>Emergency Information:</strong> Contacts and safety plans you set up for emergency situations.</li>
+                </ul>
+            </div>
+            
+            <div class="transparency-section">
+                <h4>How We Use Your Data</h4>
+                <p>We are transparent about how your information is used:</p>
+                <ul class="transparency-list">
+                    <li>To provide and maintain our services</li>
+                    <li>To personalize your experience and show relevant resources</li>
+                    <li>To communicate important service updates or security notices</li>
+                    <li>To comply with legal obligations (only when legally required)</li>
+                    <li>To improve our services through anonymized, aggregated analytics</li>
+                </ul>
+            </div>
+            
+            <div class="transparency-section">
+                <h4>Your Rights & Controls</h4>
+                <p>You have complete control over your data:</p>
+                <ul class="transparency-list">
+                    <li><strong>Access:</strong> You can view all the personal data we have about you at any time.</li>
+                    <li><strong>Correction:</strong> You can update or correct your information whenever needed.</li>
+                    <li><strong>Deletion:</strong> You can request deletion of your account and all associated data.</li>
+                    <li><strong>Export:</strong> You can export your data in standard formats for your records.</li>
+                    <li><strong>Consent Management:</strong> You can change your privacy preferences at any time.</li>
+                </ul>
+            </div>
+            
+            <div class="transparency-section">
+                <h4>Compliance & Certifications</h4>
+                <p>We adhere to the following standards and regulations:</p>
+                <ul class="transparency-list">
+                    <li>General Data Protection Regulation (GDPR)</li>
+                    <li>Protection of Personal Information Act (POPIA)</li>
+                    <li>California Consumer Privacy Act (CCPA)</li>
+                    <li>Health Insurance Portability and Accountability Act (HIPAA) for applicable features</li>
+                    <li>ISO 27001 Information Security Management</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Top Controls Bar -->
+    <div class="top-controls">
+        <div class="accessibility-controls">
+            <button class="accessibility-btn" id="accessibility-toggle" aria-label="Accessibility controls">
+                <i class="fas fa-universal-access"></i>
+            </button>
+            <button class="accessibility-btn" id="voice-toggle" aria-label="Voice activation">
+                <i class="fas fa-microphone"></i>
+            </button>
+            
+            <div class="accessibility-panel" id="accessibility-panel">
+                <h3>Accessibility Settings</h3>
+                
+                <div class="accessibility-option">
+                    <span>Voice Control</span>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="voice-control-toggle">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+                
+                <div class="voice-status">
+                    <div class="voice-indicator" id="voice-indicator"></div>
+                    <span id="voice-status-text">Voice control inactive</span>
+                </div>
+                
+                <div class="accessibility-option">
+                    <span>High Contrast</span>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="high-contrast-toggle">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+                
+                <div class="accessibility-option">
+                    <span>Large Text</span>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="text-size-toggle">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+                
+                <div class="accessibility-option">
+                    <span>Reduce Animations</span>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="reduce-motion-toggle">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+                
+                <label for="language-selector">Language:</label>
+                <select id="language-selector" class="language-selector">
+                    <option value="en">English</option>
+                    <option value="zu">isiZulu</option>
+                    <option value="xh">isiXhosa</option>
+                    <option value="af">Afrikaans</option>
+                    <option value="nso">Sepedi</option>
+                    <option value="tn">Setswana</option>
+                    <option value="st">Sesotho</option>
+                    <option value="ts">Xitsonga</option>
+                    <option value="ss">siSwati</option>
+                    <option value="ve">Tshivenda</option>
+                    <option value="nr">isiNdebele</option>
+                </select>
+                
+                <button class="btn-secondary" id="reset-accessibility">
+                    <i class="fas fa-undo"></i> Reset Settings
+                </button>
+            </div>
+        </div>
+
+        <!-- NEW: Security & Transparency Controls -->
+        <div class="security-controls" style="display: flex; gap: 10px;">
+            <button class="accessibility-btn" id="security-status" aria-label="Security status">
+                <i class="fas fa-shield-alt"></i>
+            </button>
+            <button class="accessibility-btn" id="transparency-toggle" aria-label="Privacy and transparency information">
+                <i class="fas fa-info-circle"></i>
+            </button>
+        </div>
+
+        <!-- Emergency Exit -->
+        <a href="https://www.google.com" class="btn-emergency">
+            <i class="fas fa-running"></i> Exit Quickly
+        </a>
+    </div>
+
+    <!-- App Header -->
+    <header class="app-header">
+        <button class="menu-toggle" id="menu-toggle" aria-label="Toggle navigation">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+        <h1>Dashboard</h1>
+        <div class="user-actions">
+            <button class="btn-icon" id="notifications-btn" aria-label="Notifications">
+                <i class="fas fa-bell"></i>
+                <span class="notification-badge" style="display: none;"></span>
+            </button>
+            <div class="user-avatar" id="user-menu-toggle" aria-label="User menu" tabindex="0" role="button">
+                <i class="fas fa-user"></i>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Navigation -->
+    <nav class="main-nav" id="main-nav" aria-label="Main navigation">
+        <ul>
+            <li class="active"><a href="dashboard.html" aria-current="page"><i class="fas fa-home"></i> Dashboard</a></li>
+            <li><a href="empower-vault.html"><i class="fas fa-lock"></i> EmpowerVault</a></li>
+            <li><a href="GBV Prevention.html"><i class="fas fa-road"></i> GBV Prevention</a></li>
+            <li><a href="community-pulse.html"><i class="fas fa-heartbeat"></i> Community Pulse</a></li>
+            <li><a href="emergency.html"><i class="fas fa-balance-scale"></i> Emergency Services</a></li>
+            <li><a href="justice-ally.html"><i class="fas fa-balance-scale"></i> Justice Ally</a></li>
+            <li><a href="settings.html"><i class="fas fa-cog"></i> Settings</a></li>
+        </ul>
+        
+        <div class="nav-footer">
+            <button class="btn-secondary" id="safety-center-btn">
+                <i class="fas fa-shield-alt"></i> Safety Center
+            </button>
+            <div class="connection-status">
+                <span class="status-indicator online" aria-label="Secure connection"></span>
+                <span>Secure Connection</span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Dashboard Content -->
+    <main class="dashboard-container" id="main-content" tabindex="-1">
+        <section class="welcome-section">
+            <h2>Welcome back, <span id="user-name">Friend</span></h2>
+            
+            <!-- Quick Access Cards -->
+            <div class="quick-access-grid">
+                <!-- EmpowerVault Card -->
+                <a href="empower-vault.html" class="quick-access-card vault" aria-label="EmpowerVault - Secure document storage">
+                    <i class="fas fa-lock" aria-hidden="true"></i>
+                    <h3>EmpowerVault</h3>
+                    <p>Secure document storage, Text and Voice Journals</p>
+                </a>
+                
+                <!-- GBV Prevention Card -->
+                <a href="GBV Prevention.html" class="quick-access-card path" aria-label="GBV Prevention - Tools">
+                    <i class="fas fa-road" aria-hidden="true"></i>
+                    <h3>GBV Prevention</h3>
+                    <p>GBV Prevention - Resource Directory, Safety Planning, Educational Content, Risk Assessment.</p>
+                </a>
+                
+                <!-- Community Pulse Card -->
+                <a href="community-pulse.html" class="quick-access-card community" aria-label="Community Pulse - Connect with others">
+                    <i class="fas fa-heartbeat" aria-hidden="true"></i>
+                    <h3>Community Pulse</h3>
+                    <p>Connect with others, Indicdent Reporting and Threat map.</p>
+                </a>
+                
+                <!-- Justice Ally Card -->
+                <a href="justice-ally.html" class="quick-access-card justice" aria-label="Justice Ally - Find legal support">
+                    <i class="fas fa-balance-scale" aria-hidden="true"></i>
+                    <h3>Justice Ally</h3>
+                    <p>Find legal support</p>
+                </a>
+                <!-- Emergency Card -->
+                <a href="emergency.html" class="quick-access-card emergency" aria-label="Emergency servicess - SOS, Virtual Walk and incident Recording.">
+                    <i class="fas fa-balance-scale" aria-hidden="true"></i>
+                    <h3>Emergency Services</h3>
+                    <p>Emergency servicess - SOS, Virtual Walk and incident Recording.</p>
+                </a>
+
+            </div>
+        </section>
+        
+        <!-- NEW: Security & Compliance Dashboard -->
+        <section class="security-dashboard">
+            <h3><i class="fas fa-shield-alt"></i> Security & Compliance Status</h3>
+            <div class="security-grid">
+                <div class="security-card">
+                    <h4><i class="fas fa-lock"></i> Data Encryption</h4>
+                    <div class="security-status">
+                        <span class="status-indicator status-encrypted"></span>
+                        <span>All Data Encrypted</span>
+                    </div>
+                    <div class="security-details">
+                        Your data is protected with end-to-end encryption. Only you can access your information.
+                    </div>
+                    <div class="security-actions">
+                        <button class="btn-security" id="encryption-info">
+                            <i class="fas fa-info-circle"></i> Details
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="security-card">
+                    <h4><i class="fas fa-user-shield"></i> Privacy Controls</h4>
+                    <div class="security-status">
+                        <span class="status-indicator status-compliant"></span>
+                        <span>GDPR & POPIA Compliant</span>
+                    </div>
+                    <div class="security-details">
+                        We comply with global privacy regulations. You control how your data is used and stored.
+                    </div>
+                    <div class="security-actions">
+                        <button class="btn-security" id="privacy-settings">
+                            <i class="fas fa-cog"></i> Settings
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="security-card">
+                    <h4><i class="fas fa-database"></i> Data Storage</h4>
+                    <div class="security-status">
+                        <span class="status-indicator status-secure"></span>
+                        <span>Secure Cloud Storage</span>
+                    </div>
+                    <div class="security-details">
+                        Your data is stored in certified secure facilities with multiple redundancy backups.
+                    </div>
+                    <div class="security-actions">
+                        <button class="btn-security" id="storage-info">
+                            <i class="fas fa-info-circle"></i> Learn More
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- NEW: Privacy Controls Section -->
+        <section class="privacy-controls">
+            <h3><i class="fas fa-user-cog"></i> Privacy & Data Controls</h3>
+            <div class="privacy-options">
+                <div class="privacy-option">
+                    <div class="privacy-info">
+                        <h4>Data Collection Preferences</h4>
+                        <p>Control what information we collect to improve your experience</p>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="data-collection-toggle" checked>
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+                
+                <div class="privacy-option">
+                    <div class="privacy-info">
+                        <h4>Automatic Data Backup</h4>
+                        <p>Automatically back up your data to secure cloud storage</p>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="auto-backup-toggle" checked>
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+                
+                <div class="privacy-option">
+                    <div class="privacy-info">
+                        <h4>Local-Only Storage</h4>
+                        <p>Store sensitive data only on your device (not in the cloud)</p>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="local-storage-toggle">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+                
+                <div class="privacy-option">
+                    <div class="privacy-info">
+                        <h4>Data Export</h4>
+                        <p>Download a copy of all your data for your records</p>
+                    </div>
+                    <button class="btn-security" id="export-data">
+                        <i class="fas fa-download"></i> Export Data
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Recent Activity Section -->
+        <section class="recent-activity">
+            <h3>Recent Activity</h3>
+            <div class="activity-list">
+                <div class="activity-item">
+                    <div class="activity-icon">
+                        <i class="fas fa-lock"></i>
+                    </div>
+                    <div class="activity-details">
+                        <h4>Document Secured</h4>
+                        <div class="activity-time">2 hours ago</div>
+                        <div class="activity-preview">Medical report added to EmpowerVault</div>
+                    </div>
+                </div>
+                
+                <div class="activity-item">
+                    <div class="activity-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <div class="activity-details">
+                        <h4>Security Check</h4>
+                        <div class="activity-time">Yesterday</div>
+                        <div class="activity-preview">Completed monthly security review</div>
+                    </div>
+                </div>
+                
+                <div class="activity-item">
+                    <div class="activity-icon">
+                        <i class="fas fa-file-alt"></i>
+                    </div>
+                    <div class="activity-details">
+                        <h4>Privacy Settings Updated</h4>
+                        <div class="activity-time">3 days ago</div>
+                        <div class="activity-preview">Adjusted data retention preferences</div>
+                    </div>
+                </div>
+            </div>
+            <a href="#" class="view-all-link">View All Activity</a>
+        </section>
+    </main>
+
+    <!-- Chatbot Container -->
+    <div class="chatbot-container" id="chatbot-container" role="dialog" aria-labelledby="chatbot-title">
+        <div class="chatbot-header">
+            <h3 id="chatbot-title"><i class="fas fa-robot" aria-hidden="true"></i> SafeSpace Companion</h3>
+            <button class="btn-icon" id="minimize-chatbot" aria-label="Minimize chatbot">
+                <i class="fas fa-minus" aria-hidden="true"></i>
+            </button>
+        </div>
+        
+        <div class="chatbot-messages" id="chatbot-messages" aria-live="polite">
+            <!-- Messages will appear here -->
+            <div class="chatbot-message bot-message">
+                <div class="message-content">
+                    <p>Hello there! I'm your SafeSpace Companion. How can I support you today?</p>
+                    <div class="quick-reply-buttons">
+                        <button class="btn-small quick-reply" data-message="I need emotional support">
+                            <i class="fas fa-heart" aria-hidden="true"></i> Emotional Support
+                        </button>
+                        <button class="btn-small quick-reply" data-message="Help with a feature">
+                            <i class="fas fa-question-circle" aria-hidden="true"></i> Feature Help
+                        </button>
+                        <button class="btn-small quick-reply" data-message="Safety resources">
+                            <i class="fas fa-shield-alt" aria-hidden="true"></i> Safety Resources
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="chatbot-input">
+            <textarea id="chatbot-user-input" placeholder="Type your message..." rows="1" aria-label="Type your message to the chatbot"></textarea>
+            <button class="btn-icon" id="send-chatbot-message" aria-label="Send message">
+                <i class="fas fa-paper-plane" aria-hidden="true"></i>
+            </button>
+        </div>
+        
+        <div class="chatbot-safety-controls">
+            <button class="btn-small" id="pause-chatbot">
+                <i class="fas fa-pause" aria-hidden="true"></i> Pause Chat
+            </button>
+            <button class="btn-small" id="clear-chatbot">
+                <i class="fas fa-trash" aria-hidden="true"></i> Clear History
+            </button>
+        </div>
+    </div>
+
+    <!-- Chatbot toggle button (fixed position) -->
+    <button class="chatbot-toggle" id="chatbot-toggle" aria-label="Open chatbot">
+        <i class="fas fa-robot" aria-hidden="true"></i>
+        <span class="notification-badge" id="chatbot-notification" style="display: none;"></span>
+    </button>
+
+    <script>
+        // Dashboard functionality with enhanced accessibility
+        document.addEventListener('DOMContentLoaded', function() {
+            // Screen reader announcement function
+            function announceScreenReader(message, priority = 'polite') {
+                const announcement = document.getElementById('screen-reader-announce');
+                announcement.setAttribute('aria-live', priority);
+                announcement.textContent = message;
+                
+                // Clear the message after a short delay so it can be announced again
+                setTimeout(() => {
+                    announcement.textContent = '';
+                }, 1000);
+            }
+
+            // Mobile menu toggle
+            const menuToggle = document.getElementById('menu-toggle');
+            const mainNav = document.getElementById('main-nav');
+            
+            menuToggle.addEventListener('click', function() {
+                mainNav.classList.toggle('active');
+                announceScreenReader('Navigation menu ' + (mainNav.classList.contains('active') ? 'opened' : 'closed'));
+            });
+            
+            // Close menu when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!mainNav.contains(e.target) && e.target !== menuToggle) {
+                    mainNav.classList.remove('active');
+                }
+            });
+
+            // Load user's name from authentication system
+            const userDatabase = JSON.parse(localStorage.getItem('safeSpaceUsers') || '{}');
+            const userSessions = JSON.parse(localStorage.getItem('safeSpaceSessions') || '{}');
+            
+            // Get current user ID from session
+            const currentUserId = sessionStorage.getItem('currentUserId');
+            let userName = 'Friend';
+            
+            if (currentUserId && userDatabase[currentUserId]) {
+                userName = userDatabase[currentUserId].firstName;
+            } else if (Object.keys(userSessions).length > 0) {
+                // Fallback to any existing session
+                const firstUserId = Object.keys(userSessions)[0];
+                userName = userSessions[firstUserId].firstName;
+            }
+            
+            document.getElementById('user-name').textContent = userName;
+            
+            // Set user avatar initial
+            const userAvatar = document.getElementById('user-menu-toggle');
+            userAvatar.innerHTML = userName.charAt(0).toUpperCase();
+            
+            // Add fade-in animation to cards
+            const cards = document.querySelectorAll('.quick-access-card');
+            cards.forEach((card, index) => {
+                card.style.animationDelay = `${index * 0.1}s`;
+                card.classList.add('fade-in');
+            });
+
+            // NEW: Transparency Panel Functionality
+            const transparencyToggle = document.getElementById('transparency-toggle');
+            const transparencyPanel = document.getElementById('transparency-panel');
+            const closeTransparency = document.getElementById('close-transparency');
+            const overlay = document.getElementById('overlay');
+            
+            transparencyToggle.addEventListener('click', function() {
+                transparencyPanel.classList.add('active');
+                overlay.classList.add('active');
+                document.body.style.overflow = 'hidden';
+                announceScreenReader('Privacy and transparency information opened');
+            });
+            
+            closeTransparency.addEventListener('click', function() {
+                transparencyPanel.classList.remove('active');
+                overlay.classList.remove('active');
+                document.body.style.overflow = '';
+                announceScreenReader('Privacy and transparency information closed');
+            });
+            
+            overlay.addEventListener('click', function() {
+                transparencyPanel.classList.remove('active');
+                overlay.classList.remove('active');
+                document.body.style.overflow = '';
+            });
+            
+            // NEW: Security Information Buttons
+            document.getElementById('encryption-info').addEventListener('click', function() {
+                transparencyPanel.classList.add('active');
+                overlay.classList.add('active');
+                document.body.style.overflow = 'hidden';
+                announceScreenReader('Encryption information opened');
+            });
+            
+            document.getElementById('storage-info').addEventListener('click', function() {
+                transparencyPanel.classList.add('active');
+                overlay.classList.add('active');
+                document.body.style.overflow = 'hidden';
+                announceScreenReader('Data storage information opened');
+            });
+            
+            document.getElementById('privacy-settings').addEventListener('click', function() {
+                // Scroll to privacy controls section
+                document.querySelector('.privacy-controls').scrollIntoView({ behavior: 'smooth' });
+                announceScreenReader('Navigated to privacy settings');
+            });
+            
+            // NEW: Data Export Functionality
+            document.getElementById('export-data').addEventListener('click', function() {
+                // In a real implementation, this would trigger a data export process
+                alert('Your data export has been initiated. You will receive an email with a download link when it is ready.');
+                announceScreenReader('Data export initiated');
+            });
+            
+            // NEW: Privacy Toggles
+            const dataCollectionToggle = document.getElementById('data-collection-toggle');
+            const autoBackupToggle = document.getElementById('auto-backup-toggle');
+            const localStorageToggle = document.getElementById('local-storage-toggle');
+            
+            // Load privacy settings from localStorage
+            if (localStorage.getItem('dataCollection') === 'false') {
+                dataCollectionToggle.checked = false;
+            }
+            
+            if (localStorage.getItem('autoBackup') === 'false') {
+                autoBackupToggle.checked = false;
+            }
+            
+            if (localStorage.getItem('localStorage') === 'true') {
+                localStoragetoggle.checked = true;
+            }
+            
+            // Save privacy settings
+            dataCollectionToggle.addEventListener('change', function() {
+                localStorage.setItem('dataCollection', this.checked);
+                announceScreenReader('Data collection ' + (this.checked ? 'enabled' : 'disabled'));
+            });
+            
+            autoBackupToggle.addEventListener('change', function() {
+                localStorage.setItem('autoBackup', this.checked);
+                announceScreenReader('Automatic backup ' + (this.checked ? 'enabled' : 'disabled'));
+            });
+            
+            localStorageToggle.addEventListener('change', function() {
+                localStorage.setItem('localStorage', this.checked);
+                announceScreenReader('Local-only storage ' + (this.checked ? 'enabled' : 'disabled'));
+            });
+
+            // Accessibility Controls
+            const accessibilityToggle = document.getElementById('accessibility-toggle');
+            const accessibilityPanel = document.getElementById('accessibility-panel');
+            const voiceToggle = document.getElementById('voice-toggle');
+            const voiceControlToggle = document.getElementById('voice-control-toggle');
+            const voiceIndicator = document.getElementById('voice-indicator');
+            const voiceStatusText = document.getElementById('voice-status-text');
+            const highContrastToggle = document.getElementById('high-contrast-toggle');
+            const textSizeToggle = document.getElementById('text-size-toggle');
+            const reduceMotionToggle = document.getElementById('reduce-motion-toggle');
+            const languageSelector = document.getElementById('language-selector');
+            const resetAccessibility = document.getElementById('reset-accessibility');
+            
+            let isVoiceActive = false;
+            let recognition = null;
+            
+            // Load saved accessibility settings
+            function loadAccessibilitySettings() {
+                // High contrast mode
+                if (localStorage.getItem('highContrast') === 'true') {
+                    document.body.classList.add('high-contrast');
+                    highContrastToggle.checked = true;
+                }
+                
+                // Large text mode
+                if (localStorage.getItem('largeText') === 'true') {
+                    document.body.classList.add('large-text');
+                    textSizeToggle.checked = true;
+                }
+                
+                // Reduced motion
+                if (localStorage.getItem('reduceMotion') === 'true') {
+                    document.body.classList.add('reduce-motion');
+                    reduceMotionToggle.checked = true;
+                }
+                
+                // Voice control
+                if (localStorage.getItem('voiceControl') === 'true') {
+                    voiceControlToggle.checked = true;
+                    startVoiceRecognition();
+                }
+                
+                // Language
+                const savedLanguage = localStorage.getItem('language') || 'en';
+                languageSelector.value = savedLanguage;
+            }
+            
+            // Save accessibility settings
+            function saveAccessibilitySettings() {
+                localStorage.setItem('highContrast', document.body.classList.contains('high-contrast'));
+                localStorage.setItem('largeText', document.body.classList.contains('large-text'));
+                localStorage.setItem('reduceMotion', document.body.classList.contains('reduce-motion'));
+                localStorage.setItem('voiceControl', isVoiceActive);
+                localStorage.setItem('language', languageSelector.value);
+            }
+            
+            // Toggle accessibility panel
+            accessibilityToggle.addEventListener('click', function() {
+                accessibilityPanel.classList.toggle('active');
+                announceScreenReader('Accessibility settings ' + (accessibilityPanel.classList.contains('active') ? 'opened' : 'closed'));
+            });
+            
+            // High contrast mode
+            highContrastToggle.addEventListener('change', function() {
+                document.body.classList.toggle('high-contrast', this.checked);
+                saveAccessibilitySettings();
+                announceScreenReader('High contrast mode ' + (this.checked ? 'enabled' : 'disabled'));
+            });
+            
+            // Text size toggle
+            textSizeToggle.addEventListener('change', function() {
+                document.body.classList.toggle('large-text', this.checked);
+                saveAccessibilitySettings();
+                announceScreenReader('Large text mode ' + (this.checked ? 'enabled' : 'disabled'));
+            });
+            
+            // Reduce motion toggle
+            reduceMotionToggle.addEventListener('change', function() {
+                document.body.classList.toggle('reduce-motion', this.checked);
+                saveAccessibilitySettings();
+                announceScreenReader('Reduced motion ' + (this.checked ? 'enabled' : 'disabled'));
+            });
+            
+            // Voice control toggle
+            voiceControlToggle.addEventListener('change', function() {
+                if (this.checked) {
+                    startVoiceRecognition();
+                } else {
+                    stopVoiceRecognition();
+                }
+                saveAccessibilitySettings();
+            });
+            
+            // Language selector
+            languageSelector.addEventListener('change', function() {
+                const selectedLang = this.value;
+                // In a real implementation, this would update the page content
+                saveAccessibilitySettings();
+                announceScreenReader('Language changed to ' + selectedLang);
+            });
+            
+            // Reset accessibility settings
+            resetAccessibility.addEventListener('click', function() {
+                document.body.classList.remove('high-contrast', 'large-text', 'reduce-motion');
+                highContrastToggle.checked = false;
+                textSizeToggle.checked = false;
+                reduceMotionToggle.checked = false;
+                languageSelector.value = 'en';
+                stopVoiceRecognition();
+                voiceControlToggle.checked = false;
+                localStorage.removeItem('highContrast');
+                localStorage.removeItem('largeText');
+                localStorage.removeItem('reduceMotion');
+                localStorage.removeItem('voiceControl');
+                localStorage.removeItem('language');
+                announceScreenReader('Accessibility settings reset to default');
+            });
+            
+            // Voice activation
+            voiceToggle.addEventListener('click', function() {
+                if (!isVoiceActive) {
+                    startVoiceRecognition();
+                    voiceControlToggle.checked = true;
+                } else {
+                    stopVoiceRecognition();
+                    voiceControlToggle.checked = false;
+                }
+                saveAccessibilitySettings();
+            });
+            
+            function startVoiceRecognition() {
+                // Check if browser supports speech recognition
+                if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+                    alert('Speech recognition is not supported in your browser. Please try Chrome or Edge.');
+                    return;
+                }
+                
+                const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                recognition = new SpeechRecognition();
+                
+                recognition.continuous = true;
+                recognition.interimResults = true;
+                recognition.lang = languageSelector.value;
+                
+                recognition.onstart = function() {
+                    isVoiceActive = true;
+                    voiceIndicator.classList.add('listening');
+                    voiceStatusText.textContent = 'Listening...';
+                    announceScreenReader('Voice recognition activated');
+                };
+                
+                recognition.onresult = function(event) {
+                    let interimTranscript = '';
+                    let finalTranscript = '';
+                    
+                    for (let i = event.resultIndex; i < event.results.length; i++) {
+                        const transcript = event.results[i][0].transcript;
+                        if (event.results[i].isFinal) {
+                            finalTranscript += transcript;
+                        } else {
+                            interimTranscript += transcript;
+                        }
+                    }
+                    
+                    if (finalTranscript) {
+                        processVoiceCommand(finalTranscript);
+                    }
+                };
+                
+                recognition.onerror = function(event) {
+                    console.error('Speech recognition error', event.error);
+                    if (event.error === 'not-allowed') {
+                        alert('Microphone access denied. Please allow microphone access to use voice commands.');
+                    }
+                };
+                
+                recognition.onend = function() {
+                    if (isVoiceActive) {
+                        // Restart recognition if it ended unexpectedly
+                        recognition.start();
+                    }
+                };
+                
+                recognition.start();
+            }
+            
+            function stopVoiceRecognition() {
+                if (recognition) {
+                    recognition.stop();
+                }
+                isVoiceActive = false;
+                voiceIndicator.classList.remove('listening');
+                voiceStatusText.textContent = 'Voice control inactive';
+                announceScreenReader('Voice recognition deactivated');
+            }
+            
+            function processVoiceCommand(command) {
+                command = command.toLowerCase().trim();
+                announceScreenReader('Command received: ' + command);
+                
+                // Navigation commands
+                if (command.includes('dashboard') || command.includes('home')) {
+                    window.location.href = 'dashboard.html';
+                } else if (command.includes('empower') || command.includes('vault')) {
+                    window.location.href = 'empower-vault.html';
+                } else if (command.includes('reclaim') || command.includes('path')) {
+                    window.location.href = 'reclaim-path.html';
+                } else if (command.includes('community') || command.includes('pulse')) {
+                    window.location.href = 'community-pulse.html';
+                } else if (command.includes('justice') || command.includes('ally')) {
+                    window.location.href = 'justice-ally.html';
+                } else if (command.includes('collaboration') || command.includes('collab')) {
+                    window.location.href = 'collaboration.html';
+                } else if (command.includes('settings')) {
+                    window.location.href = 'settings.html';
+                } else if (command.includes('safety') || command.includes('center')) {
+                    document.getElementById('safety-center-btn').click();
+                } else if (command.includes('emergency') || command.includes('exit')) {
+                    document.querySelector('.btn-emergency').click();
+                } else if (command.includes('chat') || command.includes('bot')) {
+                    document.getElementById('chatbot-toggle').click();
+                } else if (command.includes('help') || command.includes('support')) {
+                    // Open chatbot with help request
+                    document.getElementById('chatbot-toggle').click();
+                    setTimeout(() => {
+                        document.getElementById('chatbot-user-input').value = 'I need help';
+                        document.getElementById('send-chatbot-message').click();
+                    }, 500);
+                } else if (command.includes('privacy') || command.includes('transparency')) {
+                    document.getElementById('transparency-toggle').click();
+                } else if (command.includes('stop') || command.includes('pause')) {
+                    stopVoiceRecognition();
+                } else {
+                    // If command not recognized, ask for clarification
+                    announceScreenReader('Command not recognized. Please try again.');
+                }
+            }
+            
+            // Initialize accessibility settings
+            loadAccessibilitySettings();
+
+            // Chatbot functionality
+            const chatbotContainer = document.getElementById('chatbot-container');
+            const chatbotToggle = document.getElementById('chatbot-toggle');
+            const chatbotMessages = document.getElementById('chatbot-messages');
+            const userInput = document.getElementById('chatbot-user-input');
+            const sendButton = document.getElementById('send-chatbot-message');
+            const minimizeButton = document.getElementById('minimize-chatbot');
+            const clearButton = document.getElementById('clear-chatbot');
+            const pauseButton = document.getElementById('pause-chatbot');
+            const notificationBadge = document.getElementById('chatbot-notification');
+            const quickReplies = document.querySelectorAll('.quick-reply');
+            
+            let isChatbotActive = false;
+            let isPaused = false;
+            let unreadMessages = 0;
+            
+            // Trauma-informed responses
+            const botResponses = {
+                "greeting": [
+                    "Hello there. I'm here to listen whenever you're ready.",
+                    "Welcome back. How can I support you today?",
+                    "I'm here to help. What's on your mind?"
+                ],
+                "emotional_support": [
+                    "I hear you. It takes courage to reach out. Would you like to share more about how you're feeling?",
+                    "I'm here to listen. Your feelings are valid and important.",
+                    "That sounds difficult. Remember to breathe - you're not alone in this."
+                ],
+                "feature_help": [
+                    "I'd be happy to help you navigate our features. What specifically would you like to know?",
+                    "Let me guide you through that. Which feature are you using?",
+                    "I can explain how that works. What questions do you have?"
+                ],
+                "safety_resources": [
+                    "Your safety is most important. Would you like emergency contacts or local support resources?",
+                    "I can connect you with help. Would you prefer crisis lines or local services?",
+                    "Let me find the right resources for you. Are you looking for immediate help or ongoing support?"
+                ],
+                "default": [
+                    "I want to make sure I understand. Could you tell me more?",
+                    "I'm here to support you. Would you like to rephrase that?",
+                    "Let me think about how best to help with that."
+                ],
+                "pause": [
+                    "I'll pause our conversation here. You can resume anytime.",
+                    "Taking a break can be helpful. I'll be here when you're ready.",
+                    "I'll step back now. Return whenever you need support."
+                ],
+                "distress": [
+                    "I notice this might be difficult to talk about. Would you like to take a break?",
+                    "I'm sensing this might be overwhelming. Would you prefer to switch topics?",
+                    "It's okay to stop if this is too much. Your wellbeing comes first."
+                ]
+            };
+            
+            // Emotional support resources
+            const resources = {
+                "crisis": [
+                    "National Crisis Line: 1-800-273-TALK (8255)",
+                    "Crisis Text Line: Text HOME to 741741",
+                    "Local shelter: (555) 123-4567"
+                ],
+                "legal": [
+                    "Legal Aid Society: 1-800-123-4567",
+                    "Victim Rights Organization: www.victimrights.org",
+                    "Local legal clinic: (555) 987-6543"
+                ],
+                "therapy": [
+                    "Find trauma-informed therapists: www.psychologytoday.com",
+                    "Sliding scale clinics in your area: 4 listed",
+                    "Online therapy options: www.betterhelp.com"
+                ]
+            };
+            
+            // Toggle chatbot visibility
+            chatbotToggle.addEventListener('click', function() {
+                isChatbotActive = !isChatbotActive;
+                chatbotContainer.classList.toggle('active', isChatbotActive);
+                
+                if (isChatbotActive) {
+                    unreadMessages = 0;
+                    notificationBadge.style.display = 'none';
+                    announceScreenReader('Chatbot opened');
+                    // Focus on the input when chatbot opens
+                    setTimeout(() => {
+                        userInput.focus();
+                    }, 300);
+                } else {
+                    announceScreenReader('Chatbot closed');
+                }
+            });
+            
+            // Minimize chatbot
+            minimizeButton.addEventListener('click', function() {
+                chatbotContainer.classList.remove('active');
+                isChatbotActive = false;
+                announceScreenReader('Chatbot minimized');
+            });
+            
+            // Clear chat history
+            clearButton.addEventListener('click', function() {
+                if (confirm("Clear all chat history? This can't be undone.")) {
+                    chatbotMessages.innerHTML = `
+                        <div class="chatbot-message bot-message">
+                            <div class="message-content">
+                                <p>Hello there! I'm your SafeSpace Companion. How can I support you today?</p>
+                                <div class="quick-reply-buttons">
+                                    <button class="btn-small quick-reply" data-message="I need emotional support">
+                                        <i class="fas fa-heart"></i> Emotional Support
+                                    </button>
+                                    <button class="btn-small quick-reply" data-message="Help with a feature">
+                                        <i class="fas fa-question-circle"></i> Feature Help
+                                    </button>
+                                    <button class="btn-small quick-reply" data-message="Safety resources">
+                                        <i class="fas fa-shield-alt"></i> Safety Resources
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    setupQuickReplies();
+                    announceScreenReader('Chat history cleared');
+                }
+            });
+            
+            // Pause chatbot
+            pauseButton.addEventListener('click', function() {
+                isPaused = !isPaused;
+                pauseButton.innerHTML = isPaused ? 
+                    '<i class="fas fa-play"></i> Resume Chat' : 
+                    '<i class="fas fa-pause"></i> Pause Chat';
+                
+                if (isPaused) {
+                    addBotMessage(getRandomResponse("pause"));
+                    announceScreenReader('Chat paused');
+                } else {
+                    announceScreenReader('Chat resumed');
+                }
+            });
+            
+            // Send message
+            function sendMessage() {
+                const message = userInput.value.trim();
+                if (message && !isPaused) {
+                    addUserMessage(message);
+                    userInput.value = '';
+                    userInput.style.height = 'auto';
+                    setTimeout(() => generateResponse(message), 1000);
+                }
+            }
+            
+            // Send button click
+            sendButton.addEventListener('click', sendMessage);
+            
+            // Enter key press
+            userInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    sendMessage();
+                }
+            });
+            
+            // Auto-resize textarea
+            userInput.addEventListener('input', function() {
+                this.style.height = 'auto';
+                this.style.height = (this.scrollHeight) + 'px';
+            });
+            
+            // Add user message to chat
+            function addUserMessage(message) {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = 'chatbot-message user-message';
+                messageDiv.innerHTML = `
+                    <div class="message-content">
+                        <p>${message}</p>
+                    </div>
+                `;
+                chatbotMessages.appendChild(messageDiv);
+                scrollToBottom();
+            }
+            
+            // Add bot message to chat
+            function addBotMessage(message, emotionalState = null) {
+                if (isPaused) return;
+                
+                const messageDiv = document.createElement('div');
+                messageDiv.className = 'chatbot-message bot-message';
+                
+                let emotionalStateHTML = '';
+                if (emotionalState) {
+                    emotionalStateHTML = `
+                        <div class="emotional-state state-${emotionalState.type}">
+                            <i class="fas fa-${emotionalState.icon}"></i>
+                            ${emotionalState.text}
+                        </div>
+                    `;
+                }
+                
+                messageDiv.innerHTML = `
+                    <div class="message-content">
+                        <p>${message}</p>
+                        ${emotionalStateHTML}
+                    </div>
+                `;
+                
+                chatbotMessages.appendChild(messageDiv);
+                scrollToBottom();
+                
+                if (!isChatbotActive) {
+                    unreadMessages++;
+                    notificationBadge.textContent = unreadMessages;
+                    notificationBadge.style.display = 'flex';
+                }
+                
+                // Announce new message to screen readers
+                announceScreenReader('New message from chatbot: ' + message);
+            }
+            
+            // Generate bot response
+            function generateResponse(userMessage) {
+                // Simple sentiment analysis
+                const distressWords = ['help', 'emergency', 'hurt', 'scared', 'afraid', 'urgent'];
+                const isDistressed = distressWords.some(word => 
+                    userMessage.toLowerCase().includes(word)
+                );
+                
+                // Emotional state indicator
+                const emotionalState = isDistressed ? {
+                    type: 'distressed',
+                    icon: 'exclamation-triangle',
+                    text: 'Recognized distress keywords'
+                } : null;
+                
+                // Determine response type
+                let responseType = "default";
+                if (userMessage.includes("emotional support")) {
+                    responseType = "emotional_support";
+                } else if (userMessage.includes("feature") || userMessage.includes("help with")) {
+                    responseType = "feature_help";
+                } else if (userMessage.includes("safety") || userMessage.includes("resource")) {
+                    responseType = "safety_resources";
+                } else if (isDistressed) {
+                    responseType = "distress";
+                }
+                
+                // Get random response from appropriate category
+                const response = getRandomResponse(responseType);
+                addBotMessage(response, emotionalState);
+                
+                // If asking for resources, follow up with options
+                if (responseType === "safety_resources" || 
+                    (isDistressed && !userMessage.includes("safety"))) {
+                    setTimeout(() => {
+                        addBotMessage("Here are some resources that might help:", emotionalState);
+                        
+                        const resourceTypes = isDistressed ? ["crisis"] : ["crisis", "legal", "therapy"];
+                        resourceTypes.forEach(type => {
+                            const resourceList = resources[type].map(item => 
+                                `<li>${item}</li>`
+                            ).join('');
+                            
+                            const resourceDiv = document.createElement('div');
+                            resourceDiv.className = 'chatbot-message bot-message';
+                            resourceDiv.innerHTML = `
+                                <div class="message-content">
+                                    <p><strong>${type.charAt(0).toUpperCase() + type.slice(1)} Resources:</strong></p>
+                                    <ul>${resourceList}</ul>
+                                </div>
+                            `;
+                            chatbotMessages.appendChild(resourceDiv);
+                        });
+                        
+                        scrollToBottom();
+                    }, 1500);
+                }
+            }
+            
+            // Get random response from category
+            function getRandomResponse(category) {
+                const responses = botResponses[category] || botResponses["default"];
+                return responses[Math.floor(Math.random() * responses.length)];
+            }
+            
+            // Scroll to bottom of chat
+            function scrollToBottom() {
+                chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+            }
+            
+            // Quick reply buttons
+            function setupQuickReplies() {
+                document.querySelectorAll('.quick-reply').forEach(button => {
+                    button.addEventListener('click', function() {
+                        const message = this.getAttribute('data-message');
+                        addUserMessage(message);
+                        setTimeout(() => generateResponse(message), 1000);
+                    });
+                });
+            }
+            
+            // Initialize
+            setupQuickReplies();
+            
+            // Show chatbot after 30 seconds if not interacted with
+            setTimeout(() => {
+                if (!isChatbotActive && unreadMessages === 0) {
+                    addBotMessage("I'm here if you need any support. Just click my icon to chat.");
+                }
+            }, 30000);
+        });
+    </script>
+</body>
+</html>
